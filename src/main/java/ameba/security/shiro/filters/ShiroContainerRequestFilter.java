@@ -3,6 +3,8 @@ package ameba.security.shiro.filters;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
+import javax.ws.rs.ForbiddenException;
+import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Response;
@@ -30,11 +32,9 @@ abstract class ShiroContainerRequestFilter implements ContainerRequestFilter {
     public void filter(ContainerRequestContext containerRequestContext) {
         Subject subject = SecurityUtils.getSubject();
         if (!isAuthorized(subject)) {
-            containerRequestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).entity(
-                    "Unauthorized").build());
+            throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
         } else if (!isAccessAllowed(subject)) {
-            containerRequestContext.abortWith(Response.status(Response.Status.FORBIDDEN).entity(
-                    "Forbidden").build());
+            throw new ForbiddenException();
         }
     }
 
