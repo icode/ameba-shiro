@@ -12,9 +12,9 @@ import javax.ws.rs.ext.Provider;
 @Provider
 @Priority(Priorities.AUTHENTICATION)
 public class RequiresUserContainerRequestFilter extends ShiroContainerRequestFilter {
-	@Override
-	protected boolean isAccessAllowed(Subject subject) {
-		// If checkAuthorization succeeds, the user is allowed.
-		return true;
-	}
+    @Override
+    protected boolean isAccessAllowed(Subject subject) {
+        // If checkAuthorization succeeds, the user is allowed.
+        return true;
+    }
 }

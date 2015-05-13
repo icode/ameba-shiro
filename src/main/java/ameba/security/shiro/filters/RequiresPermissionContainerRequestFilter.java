@@ -18,37 +18,37 @@ import java.util.Objects;
  */
 @Priority(Priorities.AUTHORIZATION)
 public class RequiresPermissionContainerRequestFilter extends ShiroContainerRequestFilter {
-	private final Collection<Permission> requiredPermissions = new ArrayList<Permission>();
-	private final Logical logical;
+    private final Collection<Permission> requiredPermissions = new ArrayList<Permission>();
+    private final Logical logical;
 
-	public RequiresPermissionContainerRequestFilter(ResourceInfo resourceInfo) {
-		RequiresPermissions permissions = resourceInfo.getResourceClass().getAnnotation(
-				RequiresPermissions.class);
-		RequiresPermissions methodPermissions = resourceInfo.getResourceMethod().getAnnotation(
-				RequiresPermissions.class);
+    public RequiresPermissionContainerRequestFilter(ResourceInfo resourceInfo) {
+        RequiresPermissions permissions = resourceInfo.getResourceClass().getAnnotation(
+                RequiresPermissions.class);
+        RequiresPermissions methodPermissions = resourceInfo.getResourceMethod().getAnnotation(
+                RequiresPermissions.class);
 
-		if (methodPermissions != null) {
-			permissions = methodPermissions;
-		}
+        if (methodPermissions != null) {
+            permissions = methodPermissions;
+        }
 
-		Objects.requireNonNull(permissions);
-		logical = permissions.logical();
-		for (String permission : permissions.value()) {
-			requiredPermissions.add(new WildcardPermission(permission));
-		}
-	}
+        Objects.requireNonNull(permissions);
+        logical = permissions.logical();
+        for (String permission : permissions.value()) {
+            requiredPermissions.add(new WildcardPermission(permission));
+        }
+    }
 
-	@Override
-	protected boolean isAccessAllowed(Subject subject) {
-		if (logical == Logical.AND) {
-			return subject.isPermittedAll(requiredPermissions);
-		} else {
-			for (Permission permission : requiredPermissions) {
-				if (subject.isPermitted(permission)) {
-					return true;
-				}
-			}
-			return false;
-		}
-	}
+    @Override
+    protected boolean isAccessAllowed(Subject subject) {
+        if (logical == Logical.AND) {
+            return subject.isPermittedAll(requiredPermissions);
+        } else {
+            for (Permission permission : requiredPermissions) {
+                if (subject.isPermitted(permission)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
 }

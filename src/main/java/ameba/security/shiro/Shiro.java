@@ -6,11 +6,11 @@ import org.apache.shiro.subject.Subject;
 /**
  * @author icode
  */
-public class ShiroKit {
-    private ShiroKit() {
-    }
-
+public class Shiro {
     private static final String NAMES_SPLITER = ",";
+
+    private Shiro() {
+    }
 
     /**
      * 获取 Subject
@@ -113,7 +113,7 @@ public class ShiroKit {
      *
      * @return 通过身份验证：true，否则false
      */
-    public static boolean authenticated() {
+    public static boolean isAuthenticated() {
         return getSubject() != null && getSubject().isAuthenticated();
     }
 
@@ -122,8 +122,8 @@ public class ShiroKit {
      *
      * @return 没有通过身份验证：true，否则false
      */
-    public static boolean notAuthenticated() {
-        return !authenticated();
+    public static boolean isNotAuthenticated() {
+        return !isAuthenticated();
     }
 
     /**
@@ -131,7 +131,7 @@ public class ShiroKit {
      *
      * @return 用户：true，否则 false
      */
-    public static boolean user() {
+    public static boolean isUser() {
         return getSubject() != null && getSubject().getPrincipal() != null;
     }
 
@@ -140,8 +140,8 @@ public class ShiroKit {
      *
      * @return 访客：true，否则false
      */
-    public static boolean guest() {
-        return !user();
+    public static boolean isGuest() {
+        return !isUser();
     }
 
     /**
@@ -149,12 +149,8 @@ public class ShiroKit {
      *
      * @return 当前用户信息
      */
-    public String principal() {
-        if (getSubject() != null) {
-            // Get the principal to print out
-            Object principal = getSubject().getPrincipal();
-            return principal.toString();
-        }
-        return "";
+    @SuppressWarnings("unchecked")
+    public <T> T getPrincipal() {
+        return (T) getSubject().getPrincipal();
     }
 }

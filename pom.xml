@@ -6,7 +6,7 @@
 
     <groupId>org.amebastack.security</groupId>
     <artifactId>ameba-shiro</artifactId>
-    <version>0.1.6</version>
+    <version>0.1.7-SNAPSHOT</version>
 
     <name>Ameba-Framework-Shiro</name>
     <description>A useful Java framework shiro!</description>
@@ -140,9 +140,7 @@
 
     <properties>
         <shiro.version>1.2.3</shiro.version>
-        <ameba.version>0.1.6a</ameba.version>
-        <ameba.cache.version>0.1.1</ameba.cache.version>
-        <jaxrs.api.version>2.0</jaxrs.api.version>
+        <ameba.version>0.1.6e</ameba.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 

@@ -1,4 +1,4 @@
-package ameba.security.shiro;
+package ameba.security.shiro.internal;
 
 import ameba.security.shiro.annotations.*;
 import ameba.security.shiro.filters.*;

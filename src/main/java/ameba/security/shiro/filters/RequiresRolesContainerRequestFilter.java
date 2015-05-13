@@ -19,33 +19,33 @@ import java.util.Objects;
 @Provider
 @Priority(Priorities.AUTHORIZATION)
 public class RequiresRolesContainerRequestFilter extends ShiroContainerRequestFilter {
-	private final Collection<String> requiredRoles = new ArrayList<String>();
-	private final Logical logical;
+    private final Collection<String> requiredRoles = new ArrayList<String>();
+    private final Logical logical;
 
-	public RequiresRolesContainerRequestFilter(ResourceInfo resourceInfo) {
-		RequiresRoles roles = resourceInfo.getResourceClass().getAnnotation(RequiresRoles.class);
-		RequiresRoles methodRoles = resourceInfo.getResourceMethod().getAnnotation(RequiresRoles.class);
+    public RequiresRolesContainerRequestFilter(ResourceInfo resourceInfo) {
+        RequiresRoles roles = resourceInfo.getResourceClass().getAnnotation(RequiresRoles.class);
+        RequiresRoles methodRoles = resourceInfo.getResourceMethod().getAnnotation(RequiresRoles.class);
 
-		if (methodRoles != null) {
-			roles = methodRoles;
-		}
+        if (methodRoles != null) {
+            roles = methodRoles;
+        }
 
-		Objects.requireNonNull(roles);
-		logical = roles.logical();
-		Collections.addAll(requiredRoles, roles.value());
-	}
+        Objects.requireNonNull(roles);
+        logical = roles.logical();
+        Collections.addAll(requiredRoles, roles.value());
+    }
 
-	@Override
-	protected boolean isAccessAllowed(Subject subject) {
-		if (logical == Logical.AND) {
-			return subject.hasAllRoles(requiredRoles);
-		} else {
-			for (String role : requiredRoles) {
-				if (subject.hasRole(role)) {
-					return true;
-				}
-			}
-			return false;
-		}
-	}
+    @Override
+    protected boolean isAccessAllowed(Subject subject) {
+        if (logical == Logical.AND) {
+            return subject.hasAllRoles(requiredRoles);
+        } else {
+            for (String role : requiredRoles) {
+                if (subject.hasRole(role)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
 }
