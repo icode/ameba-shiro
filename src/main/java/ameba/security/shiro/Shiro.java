@@ -49,12 +49,22 @@ public class Shiro {
      * @return 属于:true,否则false
      */
     public static boolean hasAnyRoles(String roleNames) {
+        return hasAnyRoles(roleNames.split(NAMES_SPLITER));
+    }
+
+    /**
+     * 验证当前用户是否属于以下任意一个角色。
+     *
+     * @param roleNames 角色列表
+     * @return 属于:true,否则false
+     */
+    public static boolean hasAnyRoles(String... roleNames) {
         boolean hasAnyRole = false;
         Subject subject = getSubject();
-        if (subject != null && roleNames != null && roleNames.length() > 0) {
+        if (subject != null && roleNames != null && roleNames.length > 0) {
             // Iterate through roles and check to see if the user has one of the
             // roles
-            for (String role : roleNames.split(NAMES_SPLITER)) {
+            for (String role : roleNames) {
                 if (subject.hasRole(role.trim())) {
                     hasAnyRole = true;
                     break;
