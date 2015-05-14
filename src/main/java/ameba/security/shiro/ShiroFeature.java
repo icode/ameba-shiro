@@ -65,9 +65,9 @@ public class ShiroFeature implements Feature {
             SecurityUtils.setSecurityManager(securityManager);
 
             context.register(ShiroDynamicFeature.class)
-                    .register(SubjectFactory.class)
-                    .register(new AuthInjectionBinder())
                     .register(ShiroExceptionMapper.class)
+                    .register(new SubjectFactory())
+                    .register(new AuthInjectionBinder())
                     .register(new AbstractBinder() {
                         @Override
                         protected void configure() {
