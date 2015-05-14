@@ -140,7 +140,7 @@
 
     <properties>
         <shiro.version>1.2.3</shiro.version>
-        <ameba.version>0.1.6e</ameba.version>
+        <ameba.version>0.1.7-SNAPSHOT</ameba.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 

@@ -4,7 +4,6 @@ import ameba.security.shiro.annotations.*;
 import ameba.security.shiro.filters.*;
 import org.apache.shiro.authz.annotation.*;
 
-import javax.ws.rs.Path;
 import javax.ws.rs.container.DynamicFeature;
 import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.FeatureContext;
@@ -27,26 +26,24 @@ public class ShiroDynamicFeature implements DynamicFeature {
     @Override
     public void configure(ResourceInfo resourceInfo, FeatureContext featureContext) {
         // No need to check non-Jax-rs classes
-        if (resourceInfo.getResourceClass().getAnnotation(Path.class) != null) {
-            if (filterNeeded(RequiresAuthentication.class, RequiresNoAuthentication.class, resourceInfo)) {
-                featureContext.register(new RequiresAuthenticationContainerRequestFilter());
-            }
+        if (filterNeeded(RequiresAuthentication.class, RequiresNoAuthentication.class, resourceInfo)) {
+            featureContext.register(new RequiresAuthenticationContainerRequestFilter());
+        }
 
-            if (filterNeeded(RequiresGuest.class, RequiresNoGuest.class, resourceInfo)) {
-                featureContext.register(new RequiresGuestContainerRequestFilter());
-            }
+        if (filterNeeded(RequiresGuest.class, RequiresNoGuest.class, resourceInfo)) {
+            featureContext.register(new RequiresGuestContainerRequestFilter());
+        }
 
-            if (filterNeeded(RequiresPermissions.class, RequiresNoPermission.class, resourceInfo)) {
-                featureContext.register(new RequiresPermissionContainerRequestFilter(resourceInfo));
-            }
+        if (filterNeeded(RequiresPermissions.class, RequiresNoPermission.class, resourceInfo)) {
+            featureContext.register(new RequiresPermissionContainerRequestFilter(resourceInfo));
+        }
 
-            if (filterNeeded(RequiresRoles.class, RequiresNoRoles.class, resourceInfo)) {
-                featureContext.register(new RequiresRolesContainerRequestFilter(resourceInfo));
-            }
+        if (filterNeeded(RequiresRoles.class, RequiresNoRoles.class, resourceInfo)) {
+            featureContext.register(new RequiresRolesContainerRequestFilter(resourceInfo));
+        }
 
-            if (filterNeeded(RequiresUser.class, RequiresNoUser.class, resourceInfo)) {
-                featureContext.register(new RequiresUserContainerRequestFilter());
-            }
+        if (filterNeeded(RequiresUser.class, RequiresNoUser.class, resourceInfo)) {
+            featureContext.register(new RequiresUserContainerRequestFilter());
         }
     }
 }
