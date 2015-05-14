@@ -51,13 +51,13 @@ public class ShiroFeature implements Feature {
 
                         ini.load(in);
                     } catch (IOException e) {
-                        logger.warn("load Shiro ini error", e);
+                        logger.warn("Load Shiro ini error", e);
                     } finally {
                         IOUtils.closeQuietly(in);
                     }
                 }
             } else {
-                logger.warn("not found Shiro ini config file");
+                logger.warn("No Shiro configuration found.");
             }
 
             IniSecurityManagerFactory factory = new IniSecurityManagerFactory(ini);
