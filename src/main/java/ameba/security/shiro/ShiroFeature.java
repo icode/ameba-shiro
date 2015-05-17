@@ -12,10 +12,12 @@ import org.apache.shiro.config.Ini;
 import org.apache.shiro.config.IniSecurityManagerFactory;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.SessionManager;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.FeatureContext;
 import javax.ws.rs.ext.Provider;
@@ -32,6 +34,9 @@ public class ShiroFeature implements Feature {
 
     private static final Logger logger = LoggerFactory.getLogger(ShiroFeature.class);
 
+    @Inject
+    private ServiceLocator locator;
+
     @Override
     public boolean configure(FeatureContext context) {
         if (!context.getConfiguration().isRegistered(ShiroDynamicFeature.class)) {
@@ -39,6 +44,8 @@ public class ShiroFeature implements Feature {
             String conf = (String) context.getConfiguration().getProperty("security.shiro.conf");
 
             Ini ini = new Ini();
+            ini.setSectionProperty("main",
+                    "securityManager.subjectDAO.sessionStorageEvaluator.sessionStorageEnabled", "false");
 
             Enumeration<URL> urls = IOUtils.getResources(conf);
 
@@ -62,6 +69,7 @@ public class ShiroFeature implements Feature {
 
             IniSecurityManagerFactory factory = new IniSecurityManagerFactory(ini);
             final SecurityManager securityManager = factory.getInstance();
+
             SecurityUtils.setSecurityManager(securityManager);
 
             context.register(ShiroDynamicFeature.class)

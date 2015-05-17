@@ -16,6 +16,12 @@ public class SubjectFactory extends TypeFactory<Subject> {
     @PerLookup
     @Override
     public Subject provide() {
+//        SecurityManager securityManager = //acquired from somewhere
+//        Subject subject = ThreadContext.getSubject();
+//        if (subject == null) {
+//            subject = new Subject.Builder().sessionId(sessionId).buildSubject();
+//            ThreadContext.bind(subject);
+//        }
         return SecurityUtils.getSubject();
     }
 }
