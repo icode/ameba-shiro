@@ -1,5 +1,6 @@
 package ameba.security.shiro.internal;
 
+import ameba.message.error.ErrorMessage;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.UnauthorizedException;
 
@@ -22,6 +23,6 @@ public class ShiroExceptionMapper implements ExceptionMapper<AuthorizationExcept
             status = Response.Status.UNAUTHORIZED;
         }
 
-        return Response.status(status).build();
+        return Response.status(status).entity(ErrorMessage.fromStatus(status.getStatusCode())).build();
     }
 }
