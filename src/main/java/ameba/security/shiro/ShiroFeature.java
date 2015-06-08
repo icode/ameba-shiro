@@ -1,23 +1,17 @@
 package ameba.security.shiro;
 
-import ameba.security.shiro.internal.AuthInjectionBinder;
+import ameba.security.shiro.internal.ShiroBinder;
 import ameba.security.shiro.internal.ShiroDynamicFeature;
 import ameba.security.shiro.internal.ShiroExceptionMapper;
 import ameba.security.shiro.internal.SubjectFactory;
 import ameba.util.IOUtils;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.Authenticator;
-import org.apache.shiro.authz.Authorizer;
 import org.apache.shiro.config.Ini;
 import org.apache.shiro.config.IniSecurityManagerFactory;
 import org.apache.shiro.mgt.SecurityManager;
-import org.apache.shiro.session.mgt.SessionManager;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
 import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.FeatureContext;
 import javax.ws.rs.ext.Provider;
@@ -34,9 +28,6 @@ public class ShiroFeature implements Feature {
 
     private static final Logger logger = LoggerFactory.getLogger(ShiroFeature.class);
 
-    @Inject
-    private ServiceLocator locator;
-
     @Override
     public boolean configure(FeatureContext context) {
         if (!context.getConfiguration().isRegistered(ShiroDynamicFeature.class)) {
@@ -44,8 +35,8 @@ public class ShiroFeature implements Feature {
             String conf = (String) context.getConfiguration().getProperty("security.shiro.conf");
 
             Ini ini = new Ini();
-            ini.setSectionProperty("main",
-                    "securityManager.subjectDAO.sessionStorageEvaluator.sessionStorageEnabled", "false");
+
+            ini.load(IOUtils.getResourceAsStream("conf/shiro_default.ini"));
 
             Enumeration<URL> urls = IOUtils.getResources(conf);
 
@@ -75,18 +66,7 @@ public class ShiroFeature implements Feature {
             context.register(ShiroDynamicFeature.class)
                     .register(ShiroExceptionMapper.class)
                     .register(new SubjectFactory())
-                    .register(new AuthInjectionBinder())
-                    .register(new AbstractBinder() {
-                        @Override
-                        protected void configure() {
-                            bind(securityManager)
-                                    .to(SecurityManager.class)
-                                    .to(Authenticator.class)
-                                    .to(Authorizer.class)
-                                    .to(SessionManager.class)
-                                    .proxy(false);
-                        }
-                    });
+                    .register(new ShiroBinder(securityManager));
 
             return true;
         }
