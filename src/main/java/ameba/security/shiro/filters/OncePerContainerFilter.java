@@ -3,19 +3,16 @@ package ameba.security.shiro.filters;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.subject.Subject;
 
-import javax.annotation.Priority;
 import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.ws.rs.Priorities;
-import javax.ws.rs.container.*;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.container.ContainerResponseContext;
+import javax.ws.rs.container.ContainerResponseFilter;
 import java.io.IOException;
 
 /**
  * @author icode
  */
-@Priority(Priorities.AUTHENTICATION)
-@PreMatching
-@Singleton
 public abstract class OncePerContainerFilter implements ContainerRequestFilter, ContainerResponseFilter {
 
     public static final String ALREADY_FILTERED_SUFFIX = ".FILTERED";
