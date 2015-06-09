@@ -5,9 +5,12 @@ import org.apache.shiro.authc.Authenticator;
 import org.apache.shiro.authz.Authorizer;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.SessionManager;
+import org.apache.shiro.subject.Subject;
 import org.glassfish.hk2.api.InjectionResolver;
 import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.glassfish.jersey.process.internal.RequestScoped;
+import org.glassfish.jersey.server.spi.internal.ValueFactoryProvider;
 
 import javax.inject.Singleton;
 
@@ -24,9 +27,19 @@ public class ShiroBinder extends AbstractBinder {
 
     @Override
     protected void configure() {
-        bind(SubjectParamInjectionResolver.class).in(Singleton.class)
+
+        bindFactory(SubjectValueProvider.SubjectFactory.class)
+                .to(Subject.class)
+                .in(RequestScoped.class);
+
+        bind(SubjectValueProvider.class)
+                .to(ValueFactoryProvider.class)
+                .in(Singleton.class);
+
+        bind(SubjectValueProvider.InjectionResolver.class)
                 .to(new TypeLiteral<InjectionResolver<Auth>>() {
-                });
+                }).in(Singleton.class);
+
         bind(securityManager)
                 .to(SecurityManager.class)
                 .to(Authenticator.class)
