@@ -1,7 +1,6 @@
 package ameba.security.shiro.filters;
 
 import org.apache.shiro.mgt.SecurityManager;
-import org.apache.shiro.subject.Subject;
 
 import javax.inject.Inject;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -21,10 +20,6 @@ public abstract class OncePerContainerFilter implements ContainerRequestFilter, 
 
     protected String getAlreadyFilteredAttributeName() {
         return getClass().getName() + ALREADY_FILTERED_SUFFIX;
-    }
-
-    protected Subject createSubject() {
-        return new Subject.Builder(getSecurityManager()).buildSubject();
     }
 
     protected Boolean isFiltered(ContainerRequestContext containerRequestContext) {

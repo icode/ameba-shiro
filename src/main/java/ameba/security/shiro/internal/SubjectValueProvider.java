@@ -1,7 +1,7 @@
 package ameba.security.shiro.internal;
 
 import ameba.security.shiro.annotations.Auth;
-import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.subject.Subject;
 import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -27,16 +27,29 @@ public class SubjectValueProvider extends AbstractValueFactoryProvider {
     protected Factory<?> createValueFactory(Parameter parameter) {
         Class type = parameter.getRawType();
         if (Subject.class.isAssignableFrom(type))
-            return new SubjectFactory();
+            return new Factory<Subject>() {
+                @Override
+                public Subject provide() {
+                    return getLocator().getService(Subject.class);
+                }
+
+                @Override
+                public void dispose(Subject instance) {
+
+                }
+            };
 
         return null;
     }
 
     static final class SubjectFactory implements Factory<Subject> {
 
+        @Inject
+        private SecurityManager manager;
+
         @Override
         public Subject provide() {
-            return SecurityUtils.getSubject();
+            return new Subject.Builder(manager).buildSubject();
         }
 
         @Override
