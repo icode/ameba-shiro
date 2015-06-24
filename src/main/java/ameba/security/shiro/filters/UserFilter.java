@@ -69,7 +69,7 @@ public class UserFilter implements ContainerRequestFilter {
     private boolean isIgnoreUri() {
         String path = uriInfo.get().getPath();
         if (path.startsWith("assets/")
-                || path.equals((LOGIN_URL.startsWith("/") ? LOGIN_URL : LOGIN_URL.substring(1)) + "/")) {
+                || path.equals(LOGIN_URL.startsWith("/") ? LOGIN_URL : LOGIN_URL.substring(1))) {
             return true;
         }
         for (String uri : IGNORE_URIS) {
