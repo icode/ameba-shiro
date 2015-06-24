@@ -28,7 +28,7 @@ import java.util.List;
 @PreMatching
 public class UserFilter implements ContainerRequestFilter {
     private static final MediaType LOW_IE_DEFAULT_REQ_TYPE = new MediaType("application", "x-ms-application");
-    private static String LOGIN_URI = "/login";
+    private static String LOGIN_URL = "/login";
     private static String[] IGNORE_URIS = new String[0];
 
     @Context
@@ -39,11 +39,11 @@ public class UserFilter implements ContainerRequestFilter {
     private Application application;
 
     public UserFilter() {
-        String loginUri = (String) application.getProperty("");
-        if (StringUtils.isNotBlank(loginUri)) {
-            LOGIN_URI = loginUri;
+        String loginUrl = (String) application.getProperty("security.login.url");
+        if (StringUtils.isNotBlank(loginUrl)) {
+            LOGIN_URL = loginUrl;
         }
-        String ignoreUris = (String) application.getProperty("");
+        String ignoreUris = (String) application.getProperty("security.filter.user.ignoreUris");
         if (StringUtils.isNotBlank(ignoreUris)) {
             IGNORE_URIS = ignoreUris.split(",");
         }
@@ -57,7 +57,7 @@ public class UserFilter implements ContainerRequestFilter {
                 if (mediaTypes.size() == 0
                         || mediaTypes.contains(MediaType.TEXT_HTML_TYPE)
                         || mediaTypes.contains(LOW_IE_DEFAULT_REQ_TYPE)) {
-                    requestContext.abortWith(Response.temporaryRedirect(URI.create(LOGIN_URI)).build());
+                    requestContext.abortWith(Response.temporaryRedirect(URI.create(LOGIN_URL)).build());
                 }
             }
         }
