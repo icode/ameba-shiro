@@ -4,6 +4,7 @@ import ameba.core.Application;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.subject.Subject;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Priority;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -38,7 +39,8 @@ public class UserFilter implements ContainerRequestFilter {
     @Inject
     private Application application;
 
-    public UserFilter() {
+    @PostConstruct
+    private void postConstruct() {
         String loginUrl = (String) application.getProperty("security.login.url");
         if (StringUtils.isNotBlank(loginUrl)) {
             LOGIN_URL = StringUtils.deleteWhitespace(loginUrl);
@@ -69,7 +71,7 @@ public class UserFilter implements ContainerRequestFilter {
     private boolean isIgnoreUri() {
         String path = uriInfo.get().getPath();
         if (path.startsWith("assets/")
-                || path.equals(LOGIN_URL.startsWith("/") ? LOGIN_URL : LOGIN_URL.substring(1))) {
+                || path.equals(LOGIN_URL.startsWith("/") ? LOGIN_URL.substring(1) : LOGIN_URL)) {
             return true;
         }
         for (String uri : IGNORE_URIS) {
