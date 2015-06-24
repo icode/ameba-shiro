@@ -32,7 +32,7 @@ public class DefaultSession implements Session {
 
     @Override
     public Date getLastAccessTime() {
-        return new Date(session.getLastAccessTime());
+        return new Date(System.currentTimeMillis());
     }
 
     @Override
