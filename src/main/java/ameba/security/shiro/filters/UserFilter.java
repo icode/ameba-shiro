@@ -45,7 +45,7 @@ public class UserFilter implements ContainerRequestFilter {
         }
         String ignoreUris = (String) application.getProperty("security.filter.user.ignoreUris");
         if (StringUtils.isNotBlank(ignoreUris)) {
-            IGNORE_URIS = ignoreUris.split(",");
+            IGNORE_URIS = StringUtils.deleteWhitespace(ignoreUris).split(",");
         }
     }
 
