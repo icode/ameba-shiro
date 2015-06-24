@@ -41,7 +41,7 @@ public class UserFilter implements ContainerRequestFilter {
     public UserFilter() {
         String loginUrl = (String) application.getProperty("security.login.url");
         if (StringUtils.isNotBlank(loginUrl)) {
-            LOGIN_URL = loginUrl;
+            LOGIN_URL = StringUtils.deleteWhitespace(loginUrl);
         }
         String ignoreUris = (String) application.getProperty("security.filter.user.ignoreUris");
         if (StringUtils.isNotBlank(ignoreUris)) {
@@ -65,7 +65,8 @@ public class UserFilter implements ContainerRequestFilter {
 
     private boolean isIgnoreUri() {
         String path = uriInfo.get().getPath();
-        if (path.startsWith("assets/")) {
+        if (path.startsWith("assets/")
+                || path.equals(LOGIN_URL.startsWith("/") ? LOGIN_URL : LOGIN_URL.substring(1))) {
             return true;
         }
         for (String uri : IGNORE_URIS) {
