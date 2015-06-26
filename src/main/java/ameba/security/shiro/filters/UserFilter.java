@@ -1,6 +1,7 @@
 package ameba.security.shiro.filters;
 
 import ameba.core.Application;
+import com.google.common.base.Charsets;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -19,6 +20,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.util.List;
 
 /**
@@ -30,6 +32,7 @@ import java.util.List;
 public class UserFilter implements ContainerRequestFilter {
     private static final MediaType LOW_IE_DEFAULT_REQ_TYPE = new MediaType("application", "x-ms-application");
     private static String LOGIN_URL = "/login";
+    private static String CALL_BACK_PARAM = "callback";
     private static String[] IGNORE_URIS = new String[0];
 
     @Context
@@ -48,6 +51,10 @@ public class UserFilter implements ContainerRequestFilter {
                 LOGIN_URL = LOGIN_URL.substring(0, LOGIN_URL.length() - 2);
             }
         }
+        String callbackParam = (String) application.getProperty("security.login.param.callback");
+        if (StringUtils.isNotBlank(callbackParam)) {
+            CALL_BACK_PARAM = StringUtils.deleteWhitespace(callbackParam);
+        }
         String ignoreUris = (String) application.getProperty("security.filter.user.ignoreUris");
         if (StringUtils.isNotBlank(ignoreUris)) {
             IGNORE_URIS = StringUtils.deleteWhitespace(ignoreUris).split(",");
@@ -56,22 +63,43 @@ public class UserFilter implements ContainerRequestFilter {
 
     public void filter(ContainerRequestContext requestContext) throws IOException {
         if (!isIgnoreUri()) {
-            Subject subject = subjectProvider.get();
-            if (subject == null || (!subject.isAuthenticated() && !subject.isRemembered())) {
-                List<MediaType> mediaTypes = requestContext.getAcceptableMediaTypes();
-                if (mediaTypes.size() == 0
-                        || mediaTypes.contains(MediaType.TEXT_HTML_TYPE)
-                        || mediaTypes.contains(LOW_IE_DEFAULT_REQ_TYPE)) {
-                    requestContext.abortWith(Response.temporaryRedirect(URI.create(LOGIN_URL)).build());
+            if (isVistPage(requestContext)) {
+                Subject subject = subjectProvider.get();
+                if (subject == null || (!subject.isAuthenticated() && !subject.isRemembered())) {
+                    StringBuilder login = new StringBuilder(LOGIN_URL);
+                    if (!"disabled".equalsIgnoreCase(CALL_BACK_PARAM)) {
+                        login.append("?")
+                                .append(CALL_BACK_PARAM)
+                                .append("=")
+                                .append(
+                                        URLEncoder.encode(
+                                                uriInfo.get().getRequestUri().toString(),
+                                                Charsets.UTF_8.name()
+                                        )
+                                );
+                    }
+                    URI loginUri = URI.create(login.toString());
+                    requestContext.abortWith(Response.temporaryRedirect(loginUri).build());
                 }
             }
         }
     }
 
+    private boolean isVistPage(ContainerRequestContext requestContext) {
+        List<MediaType> mediaTypes = requestContext.getAcceptableMediaTypes();
+        return (mediaTypes.size() == 0
+                || mediaTypes.contains(MediaType.TEXT_HTML_TYPE)
+                || mediaTypes.contains(LOW_IE_DEFAULT_REQ_TYPE));
+    }
+
+    private String getLoginUrl() {
+        return LOGIN_URL.startsWith("/") ? LOGIN_URL.substring(1) : LOGIN_URL;
+    }
+
     private boolean isIgnoreUri() {
         String path = uriInfo.get().getPath();
         if (path.startsWith("assets/")
-                || path.equals(LOGIN_URL.startsWith("/") ? LOGIN_URL.substring(1) : LOGIN_URL)) {
+                || path.equals(getLoginUrl())) {
             return true;
         }
         for (String uri : IGNORE_URIS) {
