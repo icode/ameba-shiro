@@ -219,10 +219,6 @@ public class CookieRememberMeManager extends AbstractRememberMeManager {
             return maxAge;
         }
 
-        public void setMaxAge(String maxAge) {
-            this.maxAge = Times.parseDuration(maxAge);
-        }
-
         public void setMaxAge(int maxAge) {
             this.maxAge = maxAge;
         }
