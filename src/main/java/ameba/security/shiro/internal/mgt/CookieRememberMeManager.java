@@ -24,25 +24,26 @@ public class CookieRememberMeManager extends AbstractRememberMeManager {
     public static final String ADD_REMEMBER_COOKIE_KEY = REQ_KEY_PRE + "addRememberMe";
     public static final int COOKIE_MAX_AGE = Times.parseDuration("7d");
     private static final Logger logger = LoggerFactory.getLogger(CookieRememberMeManager.class);
-    private NewCookie cookie;
+    private CookieTemplate cookie;
 
-    public NewCookie getCookie() {
-        if (cookie == null) {
-            this.cookie = new NowCookie(
-                    DEFAULT_REMEMBER_ME_COOKIE_NAME,
-                    null,
-                    "/",
-                    null,
-                    NowCookie.DEFAULT_VERSION,
-                    null,
-                    COOKIE_MAX_AGE,
-                    null,
-                    true);
-        }
+    public CookieRememberMeManager() {
+        this.cookie = new CookieTemplate(
+                DEFAULT_REMEMBER_ME_COOKIE_NAME,
+                null,
+                "/",
+                null,
+                CookieTemplate.DEFAULT_VERSION,
+                null,
+                COOKIE_MAX_AGE,
+                null,
+                true);
+    }
+
+    public CookieTemplate getCookie() {
         return cookie;
     }
 
-    public void setCookie(NewCookie cookie) {
+    public void setCookie(CookieTemplate cookie) {
         this.cookie = cookie;
     }
 
@@ -58,7 +59,7 @@ public class CookieRememberMeManager extends AbstractRememberMeManager {
     @Override
     protected void rememberSerializedIdentity(Subject subject, byte[] serialized) {
         String base64 = Base64.encodeToString(serialized);
-        NewCookie template = getCookie(); //the class attribute is really a template for the outgoing cookies
+        CookieTemplate template = getCookie(); //the class attribute is really a template for the outgoing cookies
         NewCookie cookie = new NewCookie(
                 template.getName(),
                 base64,
@@ -128,44 +129,126 @@ public class CookieRememberMeManager extends AbstractRememberMeManager {
         return base64;
     }
 
-    private static class NowCookie extends NewCookie {
+    public static class CookieTemplate extends Cookie {
+        private String name;
+        private String value;
+        private int version;
+        private String path;
+        private String domain;
+        private String comment;
+        private int maxAge;
+        private Date expiry;
+        private Boolean secure = null;
+        private boolean httpOnly;
 
-        public NowCookie(String name, String value) {
-            super(name, value);
-        }
-
-        public NowCookie(String name, String value, String path, String domain, String comment, int maxAge) {
-            super(name, value, path, domain, comment, maxAge, false);
-        }
-
-        public NowCookie(String name, String value, String path, String domain, String comment, int maxAge, boolean httpOnly) {
-            super(name, value, path, domain, comment, maxAge, false, httpOnly);
-        }
-
-        public NowCookie(String name, String value, String path, String domain, int version, String comment, int maxAge) {
-            super(name, value, path, domain, version, comment, maxAge, false);
-        }
-
-        public NowCookie(String name, String value, String path, String domain, int version, String comment,
-                         int maxAge, Date expiry, boolean httpOnly) {
-            super(name, value, path, domain, version, comment, maxAge, expiry, false, httpOnly);
-        }
-
-        public NowCookie(javax.ws.rs.core.Cookie cookie) {
-            super(cookie);
-        }
-
-        public NowCookie(javax.ws.rs.core.Cookie cookie, String comment, int maxAge) {
-            super(cookie, comment, maxAge, false);
-        }
-
-        public NowCookie(javax.ws.rs.core.Cookie cookie, String comment, int maxAge, Date expiry, boolean httpOnly) {
-            super(cookie, comment, maxAge, expiry, false, httpOnly);
+        public CookieTemplate(String name,
+                              String value,
+                              String path,
+                              String domain,
+                              int version,
+                              String comment,
+                              int maxAge,
+                              Date expiry,
+                              boolean httpOnly) {
+            super(name, null);
+            this.name = name;
+            this.value = value;
+            this.path = path;
+            this.domain = domain;
+            this.version = version;
+            this.comment = comment;
+            this.maxAge = maxAge;
+            this.expiry = expiry;
+            this.httpOnly = httpOnly;
         }
 
         @Override
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        @Override
+        public int getVersion() {
+            return version;
+        }
+
+        public void setVersion(int version) {
+            this.version = version;
+        }
+
+        @Override
+        public String getPath() {
+            return path;
+        }
+
+        public void setPath(String path) {
+            this.path = path;
+        }
+
+        @Override
+        public String getDomain() {
+            return domain;
+        }
+
+        public void setDomain(String domain) {
+            this.domain = domain;
+        }
+
+        public String getComment() {
+            return comment;
+        }
+
+        public void setComment(String comment) {
+            this.comment = comment;
+        }
+
+        public int getMaxAge() {
+            return maxAge;
+        }
+
+        public void setMaxAge(String maxAge) {
+            this.maxAge = Times.parseDuration(maxAge);
+        }
+
+        public void setMaxAge(int maxAge) {
+            this.maxAge = maxAge;
+        }
+
+        public Date getExpiry() {
+            return expiry;
+        }
+
+        public void setExpiry(Date expiry) {
+            this.expiry = expiry;
+        }
+
+        public boolean isHttpOnly() {
+            return httpOnly;
+        }
+
+        public void setHttpOnly(boolean httpOnly) {
+            this.httpOnly = httpOnly;
+        }
+
         public boolean isSecure() {
-            return Requests.getSecurityContext().isSecure();
+            return secure == null ? Requests.getSecurityContext().isSecure() : secure;
+        }
+
+        public void setSecure(boolean secure) {
+            this.secure = secure;
         }
     }
 }
