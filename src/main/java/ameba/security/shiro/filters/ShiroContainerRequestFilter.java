@@ -1,8 +1,9 @@
 package ameba.security.shiro.filters;
 
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -13,6 +14,9 @@ import javax.ws.rs.core.Response;
  * @author icode
  */
 abstract class ShiroContainerRequestFilter implements ContainerRequestFilter {
+
+    @Inject
+    protected Provider<Subject> subjectProvider;
 
     /**
      * @return 返回当前是否拥有权限
@@ -30,7 +34,7 @@ abstract class ShiroContainerRequestFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext containerRequestContext) {
-        Subject subject = SecurityUtils.getSubject();
+        Subject subject = subjectProvider.get();
         if (!isAuthorized(subject)) {
             throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
         } else if (!isAccessAllowed(subject)) {
