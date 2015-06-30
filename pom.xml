@@ -6,7 +6,7 @@
 
     <groupId>org.amebastack.security</groupId>
     <artifactId>ameba-shiro</artifactId>
-    <version>0.1.7.Alpha1</version>
+    <version>0.1.7-SNAPSHOT</version>
 
     <name>Ameba-Framework-Shiro</name>
     <description>A useful Java framework shiro!</description>

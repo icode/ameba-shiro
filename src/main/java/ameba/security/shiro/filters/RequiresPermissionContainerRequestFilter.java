@@ -22,13 +22,12 @@ public class RequiresPermissionContainerRequestFilter extends ShiroContainerRequ
     private final Logical logical;
 
     public RequiresPermissionContainerRequestFilter(ResourceInfo resourceInfo) {
-        RequiresPermissions permissions = resourceInfo.getResourceClass().getAnnotation(
-                RequiresPermissions.class);
-        RequiresPermissions methodPermissions = resourceInfo.getResourceMethod().getAnnotation(
+        RequiresPermissions permissions = resourceInfo.getResourceMethod().getAnnotation(
                 RequiresPermissions.class);
 
-        if (methodPermissions != null) {
-            permissions = methodPermissions;
+        if (permissions == null) {
+            permissions = resourceInfo.getResourceClass().getAnnotation(
+                    RequiresPermissions.class);
         }
 
         Objects.requireNonNull(permissions);
