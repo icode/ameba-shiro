@@ -13,7 +13,7 @@ import javax.ws.rs.core.Response;
 /**
  * @author icode
  */
-abstract class ShiroContainerRequestFilter implements ContainerRequestFilter {
+public abstract class ShiroContainerRequestFilter implements ContainerRequestFilter {
 
     @Inject
     protected Provider<Subject> subjectProvider;
