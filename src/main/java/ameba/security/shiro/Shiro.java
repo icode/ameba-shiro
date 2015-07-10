@@ -17,7 +17,7 @@ public class Shiro {
      *
      * @return Subject
      */
-    protected static Subject getSubject() {
+    public static Subject getSubject() {
         return SecurityUtils.getSubject();
     }
 
@@ -138,6 +138,15 @@ public class Shiro {
     }
 
     /**
+     * 是否为记住我的用户
+     *
+     * @return 通过记住我认证：true，否则false
+     */
+    public static boolean isRemembered() {
+        return getSubject() != null && getSubject().isRemembered();
+    }
+
+    /**
      * 未认证通过用户，与authenticated标签相对应。与guest标签的区别是，该标签包含已记住用户。。
      *
      * @return 没有通过身份验证：true，否则false
@@ -152,7 +161,7 @@ public class Shiro {
      * @return 用户：true，否则 false
      */
     public static boolean isUser() {
-        return getSubject() != null && getSubject().getPrincipal() != null;
+        return isAuthenticated() || isRemembered();
     }
 
     /**
@@ -170,7 +179,7 @@ public class Shiro {
      * @return 当前用户信息
      */
     @SuppressWarnings("unchecked")
-    public <T> T getPrincipal() {
+    public static <T> T getPrincipal() {
         return (T) getSubject().getPrincipal();
     }
 }
