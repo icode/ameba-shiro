@@ -45,8 +45,13 @@ public class FilterUtil {
             if (uri.startsWith("/")) {
                 uri = uri.substring(1);
             }
-            if (uri.endsWith("*")) {
-                if (path.startsWith(uri.substring(0, uri.length() - 2))) {
+            if (uri.endsWith("**")) {
+                if (path.startsWith(uri.substring(0, uri.length() - 3))) {
+                    return true;
+                }
+            } else if (uri.endsWith("*")) {
+                int index = uri.length() - 2;
+                if (path.startsWith(uri.substring(0, index)) && path.indexOf(".", index + 1) == -1) {
                     return true;
                 }
             } else if (path.equals(uri)) {
