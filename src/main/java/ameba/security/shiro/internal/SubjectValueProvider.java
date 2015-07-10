@@ -1,6 +1,6 @@
 package ameba.security.shiro.internal;
 
-import ameba.security.shiro.annotations.Auth;
+import ameba.security.shiro.annotations.Security;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.subject.Subject;
 import org.glassfish.hk2.api.Factory;
@@ -59,7 +59,7 @@ public class SubjectValueProvider extends AbstractValueFactoryProvider {
     }
 
     @Singleton
-    static final class InjectionResolver extends ParamInjectionResolver<Auth> {
+    static final class InjectionResolver extends ParamInjectionResolver<Security> {
 
         public InjectionResolver() {
             super(SubjectValueProvider.class);

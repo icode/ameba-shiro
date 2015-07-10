@@ -1,6 +1,6 @@
 package ameba.security.shiro.internal;
 
-import ameba.security.shiro.annotations.Auth;
+import ameba.security.shiro.annotations.Security;
 import org.apache.shiro.authc.Authenticator;
 import org.apache.shiro.authz.Authorizer;
 import org.apache.shiro.mgt.SecurityManager;
@@ -37,7 +37,7 @@ public class ShiroBinder extends AbstractBinder {
                 .in(Singleton.class);
 
         bind(SubjectValueProvider.InjectionResolver.class)
-                .to(new TypeLiteral<InjectionResolver<Auth>>() {
+                .to(new TypeLiteral<InjectionResolver<Security>>() {
                 }).in(Singleton.class);
 
         bind(securityManager)
