@@ -1,5 +1,6 @@
 package ameba.security.shiro;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -28,8 +29,7 @@ public class Shiro {
      * @return 属于该角色：true，否则false
      */
     public static boolean hasRole(String roleName) {
-        return getSubject() != null && roleName != null
-                && roleName.length() > 0 && getSubject().hasRole(roleName);
+        return getSubject() != null && StringUtils.isNotBlank(roleName) && getSubject().hasRole(roleName);
     }
 
     /**
@@ -49,7 +49,8 @@ public class Shiro {
      * @return 属于:true,否则false
      */
     public static boolean hasAnyRoles(String roleNames) {
-        return hasAnyRoles(roleNames.split(NAMES_SPLITER));
+        return StringUtils.isNotBlank(roleNames) &&
+                hasAnyRoles(StringUtils.deleteWhitespace(roleNames).split(NAMES_SPLITER));
     }
 
     /**
@@ -59,19 +60,17 @@ public class Shiro {
      * @return 属于:true,否则false
      */
     public static boolean hasAnyRoles(String... roleNames) {
-        boolean hasAnyRole = false;
         Subject subject = getSubject();
         if (subject != null && roleNames != null && roleNames.length > 0) {
             // Iterate through roles and check to see if the user has one of the
             // roles
             for (String role : roleNames) {
-                if (subject.hasRole(role.trim())) {
-                    hasAnyRole = true;
-                    break;
+                if (subject.hasRole(role)) {
+                    return true;
                 }
             }
         }
-        return hasAnyRole;
+        return false;
     }
 
     /**
@@ -81,7 +80,8 @@ public class Shiro {
      * @return 属于:true,否则false
      */
     public static boolean hasAllRoles(String roleNames) {
-        return hasAllRoles(roleNames.split(NAMES_SPLITER));
+        return StringUtils.isNotBlank(roleNames) &&
+                hasAllRoles(StringUtils.deleteWhitespace(roleNames).split(NAMES_SPLITER));
     }
 
     /**
@@ -91,19 +91,17 @@ public class Shiro {
      * @return 属于:true,否则false
      */
     public static boolean hasAllRoles(String... roleNames) {
-        boolean hasAllRole = true;
         Subject subject = getSubject();
         if (subject != null && roleNames != null && roleNames.length > 0) {
             // Iterate through roles and check to see if the user has one of the
             // roles
             for (String role : roleNames) {
-                if (!subject.hasRole(role.trim())) {
-                    hasAllRole = false;
-                    break;
+                if (!subject.hasRole(role)) {
+                    return false;
                 }
             }
         }
-        return hasAllRole;
+        return true;
     }
 
     /**
@@ -113,8 +111,8 @@ public class Shiro {
      * @return 拥有权限：true，否则false
      */
     public static boolean hasPermission(String permission) {
-        return getSubject() != null && permission != null
-                && permission.length() > 0
+        return getSubject() != null
+                && StringUtils.isNotBlank(permission)
                 && getSubject().isPermitted(permission);
     }
 
