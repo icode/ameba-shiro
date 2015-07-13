@@ -66,6 +66,7 @@ public class FilterUtil {
 
     public static boolean isMatchMethod(String[] uri) {
         if (uri.length == 1) return true;
+        if (uri.length == 2 && StringUtils.isBlank(uri[1])) return true;
         String m = Requests.getMethod();
         for (int i = 1; i < uri.length; i++) {
             if (m.equalsIgnoreCase(uri[i])) {
