@@ -92,7 +92,7 @@ public class FilterUtil {
         }
         Set<String[]> ignore = Sets.newLinkedHashSet();
         for (String u : ignoreUris) {
-            ignore.add(u.split(" "));
+            ignore.add(u.trim().split(" "));
         }
         return ignore;
     }
