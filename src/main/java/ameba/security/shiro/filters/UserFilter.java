@@ -29,8 +29,8 @@ import java.util.Set;
 @PreMatching
 @Priority(Priorities.AUTHENTICATION)
 public class UserFilter implements ContainerRequestFilter {
-    protected Set<String> ignoreUris;
-    protected Set<String> uris;
+    protected Set<String[]> ignoreUris;
+    protected Set<String[]> uris;
     private String loginUrl = "/login";
     private String callbackParam = "callback";
     @Context
@@ -48,8 +48,8 @@ public class UserFilter implements ContainerRequestFilter {
         }
         uris = FilterUtil.getMatchUris(application.getSrcProperties(), "security.filter.user.uris");
         ignoreUris = FilterUtil.getMatchUris(application.getSrcProperties(), "security.filter.user.ignoreUris");
-        ignoreUris.add(loginUrl);
         loginUrl = FilterUtil.getLoginUrl(application.getSrcProperties());
+        ignoreUris.add(loginUrl.split(" "));
     }
 
     public void filter(ContainerRequestContext requestContext) throws IOException {

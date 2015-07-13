@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.ws.rs.Priorities;
+import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Request;
@@ -36,8 +37,8 @@ public class UriPermissionFilter extends ShiroContainerRequestFilter {
 
     private static final String IGN_KEY = "security.filter.ignoreUris";
     private static final String URIS_KEY = "security.filter.uris";
-    protected Set<String> ignoreUris;
-    protected Set<String> uris;
+    protected Set<String[]> ignoreUris;
+    protected Set<String[]> uris;
     @Context
     private Provider<UriInfo> uriInfo;
     @Context
@@ -49,14 +50,20 @@ public class UriPermissionFilter extends ShiroContainerRequestFilter {
     private void postConstruct() {
         Map<String, Object> map = application.getSrcProperties();
         ignoreUris = FilterUtil.getMatchUris(map, IGN_KEY);
-        ignoreUris.add(FilterUtil.getLoginUrl(map));
+        ignoreUris.add(FilterUtil.getLoginUrl(map).split(" "));
         uris = FilterUtil.getMatchUris(map, URIS_KEY);
     }
 
     @Override
+    public void filter(ContainerRequestContext containerRequestContext) {
+        if (!FilterUtil.isMatchUri(ignoreUris)
+                && (uris.size() == 0 || FilterUtil.isMatchUri(uris))) {
+            super.filter(containerRequestContext);
+        }
+    }
+
+    @Override
     protected boolean isAccessAllowed(Subject subject) {
-        return FilterUtil.isMatchUri(ignoreUris)
-                || ((uris.size() == 0 || FilterUtil.isMatchUri(uris))
-                && subject.isPermitted(uriInfo.get().getPath() + ":" + requestProvider.get().getMethod().toLowerCase()));
+        return subject.isPermitted(uriInfo.get().getPath() + ":" + requestProvider.get().getMethod().toLowerCase());
     }
 }
