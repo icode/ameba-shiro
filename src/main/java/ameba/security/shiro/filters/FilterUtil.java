@@ -36,12 +36,9 @@ public class FilterUtil {
         return loginUrl;
     }
 
-    public static boolean isIgnoreUri(Set<String> ignoreUris) {
+    public static boolean isMatchUri(Set<String> uris) {
         String path = Requests.getUriInfo().getPath();
-        if (path.startsWith("assets/")) {
-            return true;
-        }
-        for (String uri : ignoreUris) {
+        for (String uri : uris) {
             if (uri.startsWith("/")) {
                 uri = uri.substring(1);
             }
@@ -61,7 +58,7 @@ public class FilterUtil {
         return false;
     }
 
-    public static Set<String> getIgnoreUris(Map<String, Object> props, String key) {
+    public static Set<String> getMatchUris(Map<String, Object> props, String key) {
         Set<String> ignoreUris = Sets.newLinkedHashSet();
         String ignores = (String) props.get(key);
         if (StringUtils.isNotBlank(ignores)) {

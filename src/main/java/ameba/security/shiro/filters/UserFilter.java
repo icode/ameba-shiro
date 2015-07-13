@@ -30,6 +30,7 @@ import java.util.Set;
 @Priority(Priorities.AUTHENTICATION)
 public class UserFilter implements ContainerRequestFilter {
     protected Set<String> ignoreUris;
+    protected Set<String> uris;
     private String loginUrl = "/login";
     private String callbackParam = "callback";
     @Context
@@ -45,13 +46,14 @@ public class UserFilter implements ContainerRequestFilter {
         if (StringUtils.isNotBlank(callbackParam)) {
             this.callbackParam = StringUtils.deleteWhitespace(callbackParam);
         }
-        ignoreUris = FilterUtil.getIgnoreUris(application.getSrcProperties(), "security.filter.user.ignoreUris");
-        loginUrl = FilterUtil.getLoginUrl(application.getSrcProperties());
+        uris = FilterUtil.getMatchUris(application.getSrcProperties(), "security.filter.user.uris");
+        ignoreUris = FilterUtil.getMatchUris(application.getSrcProperties(), "security.filter.user.ignoreUris");
         ignoreUris.add(loginUrl);
+        loginUrl = FilterUtil.getLoginUrl(application.getSrcProperties());
     }
 
     public void filter(ContainerRequestContext requestContext) throws IOException {
-        if (!FilterUtil.isIgnoreUri(ignoreUris)) {
+        if ((uris.size() == 0 || FilterUtil.isMatchUri(uris)) && !FilterUtil.isMatchUri(ignoreUris)) {
             if (FilterUtil.isVisitPage(requestContext)) {
                 Subject subject = subjectProvider.get();
                 if (subject == null || (!subject.isAuthenticated() && !subject.isRemembered())) {
