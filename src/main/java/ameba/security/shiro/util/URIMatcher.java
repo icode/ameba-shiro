@@ -45,9 +45,6 @@ public class URIMatcher {
                 }
             }
         }
-        if (!this.uri.startsWith("/")) {
-            this.uri = "/" + this.uri;
-        }
 
         Matcher matcher = URI_REGEX.matcher(this.uri);
         StringBuilder regex = new StringBuilder("^");
@@ -65,6 +62,9 @@ public class URIMatcher {
             this.hasFragment = this.uri.contains("#");
             this.hasQuery = this.uri.contains("\\?");
         } else {
+            if (!this.uri.startsWith("/")) {
+                this.uri = "/" + this.uri;
+            }
             this.preMatch = this.uri.endsWith("**");
             if (this.preMatch) {
                 this.uri = this.uri.substring(0, uri.length() - 3);
