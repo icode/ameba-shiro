@@ -80,27 +80,19 @@ public class URIMatcher {
         if (getMethods().contains(WILDCARD_TOKEN)
                 || getMethods().contains(method)) {
             String uri = getUri();
-            String path;
+            String path = reqUri.getPath();
             if (isUriRegex()) {
 
-                boolean hasFr = uri.contains("#");
-                boolean hasQr = uri.contains("\\?");
-
-                if (hasFr && hasQr) {
-                    path = reqUri.getPath() + "#" + reqUri.getFragment() + "?" + reqUri.getQuery();
-                } else if (hasFr) {
-                    path = reqUri.getPath() + "#" + reqUri.getFragment();
-                } else if (hasQr) {
-                    path = reqUri.getPath() + "?" + reqUri.getQuery();
-                } else {
-                    path = reqUri.getPath();
+                if (uri.contains("#")) {
+                    path += ("#" + reqUri.getFragment());
+                }
+                if (uri.contains("\\?")) {
+                    path += ("?" + reqUri.getQuery());
                 }
                 if (getUriPattern().matcher(path).matches()) {
                     return true;
                 }
             } else {
-                path = reqUri.getPath();
-
                 if (uri.endsWith("**")) {
                     if (path.startsWith(uri.substring(0, uri.length() - 3))) {
                         return true;
