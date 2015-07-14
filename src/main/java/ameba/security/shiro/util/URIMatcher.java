@@ -45,8 +45,8 @@ public class URIMatcher {
                 }
             }
         }
-        if (this.uri.startsWith("/")) {
-            this.uri = this.uri.substring(1);
+        if (!this.uri.startsWith("/")) {
+            this.uri = "/" + this.uri;
         }
 
         Matcher matcher = URI_REGEX.matcher(this.uri);
