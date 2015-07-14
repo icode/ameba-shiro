@@ -4,6 +4,7 @@ import ameba.core.Application;
 import ameba.security.shiro.authz.permission.URIPermission;
 import ameba.security.shiro.util.FilterUtil;
 import ameba.security.shiro.util.URIMatcher;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.subject.Subject;
 import org.glassfish.jersey.server.ExtendedUriInfo;
 
@@ -17,6 +18,7 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Request;
+import javax.ws.rs.core.UriInfo;
 import java.util.Map;
 import java.util.Set;
 
@@ -67,7 +69,13 @@ public class UriPermissionFilter extends ShiroContainerRequestFilter {
 
     @Override
     protected boolean isAccessAllowed(Subject subject) {
-        String permis = uriInfo.get().getRequestUri() + ":" + requestProvider.get().getMethod();
-        return subject.isPermitted(new URIPermission(permis));
+        UriInfo ui = uriInfo.get();
+        StringBuilder permis = new StringBuilder(ui.getPath());
+        String query = ui.getRequestUri().getQuery();
+        if (StringUtils.isNotBlank(query)) {
+            permis.append("?").append(query);
+        }
+        permis.append(":").append(requestProvider.get().getMethod());
+        return subject.isPermitted(new URIPermission(permis.toString()));
     }
 }
