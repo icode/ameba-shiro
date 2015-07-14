@@ -78,12 +78,23 @@ public class URIMatcher {
     public boolean matches(String path, String method) {
         if (getMethods().contains(WILDCARD_TOKEN)
                 || getMethods().contains(method)) {
+            String uri = getUri();
             if (isUriRegex()) {
+
+                if (!uri.contains("\\?")) {
+                    int paramsIndex = path.indexOf("?");
+                    if (paramsIndex != -1) {
+                        path = path.substring(0, paramsIndex);
+                    }
+                }
                 if (getUriPattern().matcher(path).matches()) {
                     return true;
                 }
             } else {
-                String uri = getUri();
+                int paramsIndex = path.indexOf("?");
+                if (paramsIndex != -1) {
+                    path = path.substring(0, paramsIndex);
+                }
                 if (uri.endsWith("**")) {
                     if (path.startsWith(uri.substring(0, uri.length() - 3))) {
                         return true;

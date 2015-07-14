@@ -67,7 +67,7 @@ public class UriPermissionFilter extends ShiroContainerRequestFilter {
 
     @Override
     protected boolean isAccessAllowed(Subject subject) {
-        String permis = uriInfo.get().getPath() + ":" + requestProvider.get().getMethod();
+        String permis = uriInfo.get().getRequestUri() + ":" + requestProvider.get().getMethod();
         return subject.isPermitted(new URIPermission(permis));
     }
 }
