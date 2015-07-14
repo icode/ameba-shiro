@@ -86,7 +86,9 @@ public class URIMatcher {
                 boolean hasFr = uri.contains("#");
                 boolean hasQr = uri.contains("\\?");
 
-                if (!hasFr && !hasQr) {
+                if (hasFr && hasQr) {
+                    path = reqUri.getPath() + "#" + reqUri.getFragment() + "?" + reqUri.getQuery();
+                } else if (!hasFr && !hasQr) {
                     path = reqUri.getPath();
                 } else if (hasFr) {
                     path = reqUri.getPath() + "#" + reqUri.getFragment();
@@ -98,7 +100,7 @@ public class URIMatcher {
                 }
             } else {
                 path = reqUri.getPath();
-                
+
                 if (uri.endsWith("**")) {
                     if (path.startsWith(uri.substring(0, uri.length() - 3))) {
                         return true;
