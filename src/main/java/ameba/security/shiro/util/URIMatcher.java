@@ -3,6 +3,7 @@ package ameba.security.shiro.util;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 
+import java.net.URI;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -75,26 +76,29 @@ public class URIMatcher {
         return uriPattern;
     }
 
-    public boolean matches(String path, String method) {
+    public boolean matches(URI reqUri, String method) {
         if (getMethods().contains(WILDCARD_TOKEN)
                 || getMethods().contains(method)) {
             String uri = getUri();
+            String path;
             if (isUriRegex()) {
 
-                if (!uri.contains("\\?")) {
-                    int paramsIndex = path.indexOf("?");
-                    if (paramsIndex != -1) {
-                        path = path.substring(0, paramsIndex);
-                    }
+                boolean hasFr = uri.contains("#");
+                boolean hasQr = uri.contains("\\?");
+
+                if (!hasFr && !hasQr) {
+                    path = reqUri.getPath();
+                } else if (hasFr) {
+                    path = reqUri.getPath() + "#" + reqUri.getFragment();
+                } else {
+                    path = reqUri.getPath() + "?" + reqUri.getQuery();
                 }
                 if (getUriPattern().matcher(path).matches()) {
                     return true;
                 }
             } else {
-                int paramsIndex = path.indexOf("?");
-                if (paramsIndex != -1) {
-                    path = path.substring(0, paramsIndex);
-                }
+                path = reqUri.getPath();
+                
                 if (uri.endsWith("**")) {
                     if (path.startsWith(uri.substring(0, uri.length() - 3))) {
                         return true;

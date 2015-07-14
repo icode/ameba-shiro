@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.MediaType;
+import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +38,7 @@ public class FilterUtil {
     }
 
     public static boolean isMatchUri(Set<URIMatcher> matchers) {
-        String path = Requests.getUriInfo().getPath();
+        URI path = Requests.getUriInfo().getRequestUri();
         String method = Requests.getMethod();
         for (URIMatcher matcher : matchers) {
             if (matcher.matches(path, method)) {
