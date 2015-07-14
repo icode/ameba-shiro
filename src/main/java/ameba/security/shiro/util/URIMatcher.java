@@ -82,7 +82,6 @@ public class URIMatcher {
             String uri = getUri();
             String path = reqUri.getPath();
             if (isUriRegex()) {
-
                 if (uri.contains("#")) {
                     path += ("#" + reqUri.getFragment());
                 }
