@@ -132,6 +132,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.amebastack.module</groupId>
+            <artifactId>ameba-cache-core</artifactId>
+            <version>${ameba.cache.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-core</artifactId>
             <version>${shiro.version}</version>
@@ -146,6 +152,7 @@
     <properties>
         <shiro.version>1.2.3</shiro.version>
         <ameba.version>0.1.7.Alpha1</ameba.version>
+        <ameba.cache.version>0.1.7.Alpha1</ameba.cache.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 

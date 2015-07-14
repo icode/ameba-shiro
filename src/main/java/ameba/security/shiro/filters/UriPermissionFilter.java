@@ -1,7 +1,11 @@
 package ameba.security.shiro.filters;
 
 import ameba.core.Application;
+import ameba.security.shiro.authz.permission.URIPermission;
+import ameba.security.shiro.util.FilterUtil;
+import ameba.security.shiro.util.URIMatcher;
 import org.apache.shiro.subject.Subject;
+import org.glassfish.jersey.server.ExtendedUriInfo;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Priority;
@@ -13,7 +17,6 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Request;
-import javax.ws.rs.core.UriInfo;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,10 +40,10 @@ public class UriPermissionFilter extends ShiroContainerRequestFilter {
 
     private static final String IGN_KEY = "security.filter.ignoreUris";
     private static final String URIS_KEY = "security.filter.uris";
-    protected Set<String[]> ignoreUris;
-    protected Set<String[]> uris;
+    protected Set<URIMatcher> ignoreUris;
+    protected Set<URIMatcher> uris;
     @Context
-    private Provider<UriInfo> uriInfo;
+    private Provider<ExtendedUriInfo> uriInfo;
     @Context
     private Provider<Request> requestProvider;
     @Inject
@@ -50,7 +53,7 @@ public class UriPermissionFilter extends ShiroContainerRequestFilter {
     private void postConstruct() {
         Map<String, Object> map = application.getSrcProperties();
         ignoreUris = FilterUtil.getMatchUris(map, IGN_KEY);
-        ignoreUris.add(FilterUtil.getLoginUrl(map).split(" "));
+        ignoreUris.add(new URIMatcher(FilterUtil.getLoginUrl(map)));
         uris = FilterUtil.getMatchUris(map, URIS_KEY);
     }
 
@@ -64,6 +67,7 @@ public class UriPermissionFilter extends ShiroContainerRequestFilter {
 
     @Override
     protected boolean isAccessAllowed(Subject subject) {
-        return subject.isPermitted(uriInfo.get().getPath() + ":" + requestProvider.get().getMethod().toLowerCase());
+        String permis = uriInfo.get().getPath() + ":" + requestProvider.get().getMethod();
+        return subject.isPermitted(new URIPermission(permis));
     }
 }

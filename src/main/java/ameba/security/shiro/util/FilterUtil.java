@@ -1,4 +1,4 @@
-package ameba.security.shiro.filters;
+package ameba.security.shiro.util;
 
 import ameba.core.Requests;
 import com.google.common.collect.Sets;
@@ -36,47 +36,18 @@ public class FilterUtil {
         return loginUrl;
     }
 
-    public static boolean isMatchUri(Set<String[]> uris) {
+    public static boolean isMatchUri(Set<URIMatcher> matchers) {
         String path = Requests.getUriInfo().getPath();
-        for (String[] uriWithM : uris) {
-            if (uriWithM.length < 1) continue;
-            String uri = uriWithM[0];
-            if (StringUtils.isBlank(uri)) continue;
-
-            if (uri.startsWith("/")) {
-                uri = uri.substring(1);
-            }
-            if (isMatchMethod(uriWithM)) {
-                if (uri.endsWith("**")) {
-                    if (path.startsWith(uri.substring(0, uri.length() - 3))) {
-                        return true;
-                    }
-                } else if (uri.endsWith("*")) {
-                    int index = uri.length() - 2;
-                    if (path.startsWith(uri.substring(0, index)) && path.indexOf(".", index + 1) == -1) {
-                        return true;
-                    }
-                } else if (path.equals(uri)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public static boolean isMatchMethod(String[] uri) {
-        if (uri.length == 1) return true;
-        if (uri.length == 2 && StringUtils.isBlank(uri[1])) return true;
-        String m = Requests.getMethod();
-        for (int i = 1; i < uri.length; i++) {
-            if (m.equalsIgnoreCase(uri[i])) {
+        String method = Requests.getMethod();
+        for (URIMatcher matcher : matchers) {
+            if (matcher.matches(path, method)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static Set<String[]> getMatchUris(Map<String, Object> props, String key) {
+    public static Set<URIMatcher> getMatchUris(Map<String, Object> props, String key) {
         Set<String> ignoreUris = Sets.newLinkedHashSet();
         String ignores = (String) props.get(key);
         if (StringUtils.isNotBlank(ignores)) {
@@ -91,9 +62,9 @@ public class FilterUtil {
                 }
             }
         }
-        Set<String[]> ignore = Sets.newLinkedHashSet();
+        Set<URIMatcher> ignore = Sets.newLinkedHashSet();
         for (String u : ignoreUris) {
-            ignore.add(u.trim().split(" "));
+            ignore.add(new URIMatcher(u));
         }
         return ignore;
     }

@@ -1,6 +1,8 @@
 package ameba.security.shiro.filters;
 
 import ameba.core.Application;
+import ameba.security.shiro.util.FilterUtil;
+import ameba.security.shiro.util.URIMatcher;
 import com.google.common.base.Charsets;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.subject.Subject;
@@ -29,8 +31,8 @@ import java.util.Set;
 @PreMatching
 @Priority(Priorities.AUTHENTICATION)
 public class UserFilter implements ContainerRequestFilter {
-    protected Set<String[]> ignoreUris;
-    protected Set<String[]> uris;
+    protected Set<URIMatcher> ignoreUris;
+    protected Set<URIMatcher> uris;
     private String loginUrl = "/login";
     private String callbackParam = "callback";
     @Context
@@ -49,7 +51,7 @@ public class UserFilter implements ContainerRequestFilter {
         uris = FilterUtil.getMatchUris(application.getSrcProperties(), "security.filter.user.uris");
         ignoreUris = FilterUtil.getMatchUris(application.getSrcProperties(), "security.filter.user.ignoreUris");
         loginUrl = FilterUtil.getLoginUrl(application.getSrcProperties());
-        ignoreUris.add(loginUrl.split(" "));
+        ignoreUris.add(new URIMatcher(loginUrl));
     }
 
     public void filter(ContainerRequestContext requestContext) throws IOException {
