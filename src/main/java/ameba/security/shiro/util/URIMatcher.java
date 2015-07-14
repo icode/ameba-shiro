@@ -18,6 +18,8 @@ public class URIMatcher {
     private Set<String> methods = Sets.newHashSet();
     private String uri;
     private Pattern uriPattern;
+    private boolean hasQuery;
+    private boolean hasFragment;
 
     private boolean uriRegex = false;
 
@@ -43,6 +45,9 @@ public class URIMatcher {
         if (this.uri.startsWith("/")) {
             this.uri = this.uri.substring(1);
         }
+
+        this.hasFragment = this.uri.contains("#");
+        this.hasQuery = this.uri.contains("\\?");
 
         Matcher matcher = URI_REGEX.matcher(this.uri);
         StringBuilder regex = new StringBuilder("^");
@@ -82,10 +87,10 @@ public class URIMatcher {
             String uri = getUri();
             String path = reqUri.getPath();
             if (isUriRegex()) {
-                if (uri.contains("#")) {
+                if (hasFragment) {
                     path += ("#" + reqUri.getFragment());
                 }
-                if (uri.contains("\\?")) {
+                if (hasQuery) {
                     path += ("?" + reqUri.getQuery());
                 }
                 if (getUriPattern().matcher(path).matches()) {
