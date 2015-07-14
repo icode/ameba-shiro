@@ -20,6 +20,9 @@ public class URIMatcher {
     private Pattern uriPattern;
     private boolean hasQuery;
     private boolean hasFragment;
+    private boolean preMatch;
+    private boolean oneDepthMatch;
+    private int oneDepthMatchLength;
 
     private boolean uriRegex = false;
 
@@ -46,9 +49,6 @@ public class URIMatcher {
             this.uri = this.uri.substring(1);
         }
 
-        this.hasFragment = this.uri.contains("#");
-        this.hasQuery = this.uri.contains("\\?");
-
         Matcher matcher = URI_REGEX.matcher(this.uri);
         StringBuilder regex = new StringBuilder("^");
         int start = 0;
@@ -62,6 +62,20 @@ public class URIMatcher {
         if (this.uriRegex) {
             regex.append("$");
             uriPattern = Pattern.compile(regex.toString());
+            this.hasFragment = this.uri.contains("#");
+            this.hasQuery = this.uri.contains("\\?");
+        } else {
+            this.preMatch = this.uri.endsWith("**");
+            if (this.preMatch) {
+                this.uri = this.uri.substring(0, uri.length() - 3);
+            } else {
+                this.oneDepthMatch = this.uri.endsWith("*");
+                if (this.oneDepthMatch) {
+                    int index = this.uri.length() - 2;
+                    this.uri = this.uri.substring(0, index);
+                    this.oneDepthMatchLength = index + 1;
+                }
+            }
         }
     }
 
@@ -97,13 +111,14 @@ public class URIMatcher {
                     return true;
                 }
             } else {
-                if (uri.endsWith("**")) {
-                    if (path.startsWith(uri.substring(0, uri.length() - 3))) {
+                if (preMatch) {
+                    if (path.startsWith(uri)) {
                         return true;
                     }
-                } else if (uri.endsWith("*")) {
-                    int index = uri.length() - 2;
-                    if (path.startsWith(uri.substring(0, index)) && path.indexOf("/", index + 1) == -1) {
+                } else if (oneDepthMatch) {
+                    if (path.startsWith(uri)
+                            && (path.length() < oneDepthMatchLength
+                            || path.indexOf("/", oneDepthMatchLength) == -1)) {
                         return true;
                     }
                 } else if (path.equals(uri)) {
