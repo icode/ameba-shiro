@@ -88,12 +88,12 @@ public class URIMatcher {
 
                 if (hasFr && hasQr) {
                     path = reqUri.getPath() + "#" + reqUri.getFragment() + "?" + reqUri.getQuery();
-                } else if (!hasFr && !hasQr) {
-                    path = reqUri.getPath();
                 } else if (hasFr) {
                     path = reqUri.getPath() + "#" + reqUri.getFragment();
-                } else {
+                } else if (hasQr) {
                     path = reqUri.getPath() + "?" + reqUri.getQuery();
+                } else {
+                    path = reqUri.getPath();
                 }
                 if (getUriPattern().matcher(path).matches()) {
                     return true;
