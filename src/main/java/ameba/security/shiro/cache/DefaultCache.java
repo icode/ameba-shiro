@@ -1,6 +1,5 @@
 package ameba.security.shiro.cache;
 
-import ameba.http.session.Session;
 import com.google.common.collect.Maps;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
@@ -21,7 +20,7 @@ public class DefaultCache<K, V> implements Cache<K, V> {
 
     public DefaultCache(String name) {
         cacheName = CACHE_PRE_KEY + name;
-        caches = ameba.cache.Cache.gat(cacheName, (int) Session.getTimeout());
+        caches = ameba.cache.Cache.get(cacheName);
         if (caches == null) {
             caches = Maps.newLinkedHashMap();
         }
@@ -51,7 +50,7 @@ public class DefaultCache<K, V> implements Cache<K, V> {
     }
 
     protected void flush() {
-        ameba.cache.Cache.syncSet(cacheName, caches, (int) Session.getTimeout());
+        ameba.cache.Cache.syncSet(cacheName, caches);
     }
 
     @Override
