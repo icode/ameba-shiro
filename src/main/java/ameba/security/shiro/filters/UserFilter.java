@@ -5,6 +5,7 @@ import ameba.security.shiro.util.FilterUtil;
 import ameba.security.shiro.util.URIMatcher;
 import com.google.common.base.Charsets;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.subject.Subject;
 import org.glassfish.jersey.server.ExtendedUriInfo;
 
@@ -56,9 +57,9 @@ public class UserFilter implements ContainerRequestFilter {
 
     public void filter(ContainerRequestContext requestContext) throws IOException {
         if ((uris.size() == 0 || FilterUtil.isMatchUri(uris)) && !FilterUtil.isMatchUri(ignoreUris)) {
-            if (FilterUtil.isVisitPage(requestContext)) {
-                Subject subject = subjectProvider.get();
-                if (subject == null || (!subject.isAuthenticated() && !subject.isRemembered())) {
+            Subject subject = subjectProvider.get();
+            if (subject == null || (!subject.isAuthenticated() && !subject.isRemembered())) {
+                if (FilterUtil.isVisitPage(requestContext)) {
                     StringBuilder login = new StringBuilder(loginUrl);
                     if (!"disabled".equalsIgnoreCase(callbackParam)) {
                         login.append("?")
@@ -73,6 +74,8 @@ public class UserFilter implements ContainerRequestFilter {
                     }
                     URI loginUri = URI.create(login.toString());
                     requestContext.abortWith(Response.temporaryRedirect(loginUri).build());
+                } else {
+                    throw new UnauthorizedException();
                 }
             }
         }
