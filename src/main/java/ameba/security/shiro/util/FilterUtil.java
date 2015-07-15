@@ -75,6 +75,7 @@ public class FilterUtil {
         List<MediaType> mediaTypes = requestContext.getAcceptableMediaTypes();
         return (mediaTypes.size() == 0
                 || mediaTypes.contains(MediaType.TEXT_HTML_TYPE)
+                || mediaTypes.contains(MediaType.APPLICATION_XHTML_XML_TYPE)
                 || mediaTypes.contains(LOW_IE_DEFAULT_REQ_TYPE));
     }
 }
