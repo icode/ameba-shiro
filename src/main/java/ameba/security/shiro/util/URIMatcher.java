@@ -63,7 +63,7 @@ public class URIMatcher {
         if (this.uriRegex) {
             int endIndex = this.uri.length() - 1;
             if (start < endIndex) {
-                regex.append(this.uri.substring(start, endIndex));
+                regex.append(this.uri.substring(start, this.uri.length()));
             }
             regex.append("$");
             uriPattern = Pattern.compile(regex.toString());
