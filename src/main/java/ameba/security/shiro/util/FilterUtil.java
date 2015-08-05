@@ -73,9 +73,10 @@ public class FilterUtil {
 
     public static boolean isVisitPage(ContainerRequestContext requestContext) {
         List<MediaType> mediaTypes = requestContext.getAcceptableMediaTypes();
-        return (mediaTypes.size() == 0
+        return mediaTypes.size() == 0
+                || mediaTypes.contains(MediaType.WILDCARD_TYPE)
                 || mediaTypes.contains(MediaType.TEXT_HTML_TYPE)
                 || mediaTypes.contains(MediaType.APPLICATION_XHTML_XML_TYPE)
-                || mediaTypes.contains(LOW_IE_DEFAULT_REQ_TYPE));
+                || mediaTypes.contains(LOW_IE_DEFAULT_REQ_TYPE);
     }
 }
