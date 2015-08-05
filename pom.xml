@@ -150,7 +150,7 @@
     </dependencies>
 
     <properties>
-        <shiro.version>1.2.3</shiro.version>
+        <shiro.version>1.2.4</shiro.version>
         <ameba.version>0.1.7.Alpha1</ameba.version>
         <ameba.cache.version>0.1.7.Alpha1</ameba.cache.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
