@@ -30,7 +30,7 @@ public class InjectReflectionBuilder extends ReflectionBuilder {
     protected void createNewInstance(Map<String, Object> objects, String name, String value) {
         Object currentInstance = objects.get(name);
         if (currentInstance != null) {
-            logger.info("An instance with name '{}' already exists.  " +
+            logger.debug("An instance with name '{}' already exists.  " +
                     "Redefining this object as a new instance of type {}", name, value);
         }
 
