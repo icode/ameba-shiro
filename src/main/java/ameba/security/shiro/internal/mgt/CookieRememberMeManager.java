@@ -111,7 +111,7 @@ public class CookieRememberMeManager extends AbstractRememberMeManager {
     /**
      * Sometimes a user agent will send the rememberMe cookie value without padding,
      * most likely because {@code =} is a separator in the cookie header.
-     * <p/>
+     * <br>
      * Contributed by Luis Arias.  Thanks Luis!
      *
      * @param base64 the base64 encoded String that may need to be padded

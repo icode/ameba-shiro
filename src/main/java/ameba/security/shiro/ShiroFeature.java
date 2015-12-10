@@ -1,5 +1,6 @@
 package ameba.security.shiro;
 
+import ameba.cache.Cache;
 import ameba.security.shiro.config.IniSecurityManagerFactory;
 import ameba.security.shiro.filters.ShiroContainerFilter;
 import ameba.security.shiro.internal.ShiroBinder;
@@ -36,6 +37,12 @@ public class ShiroFeature implements Feature {
     @Override
     public boolean configure(FeatureContext context) {
         if (!context.getConfiguration().isRegistered(ShiroDynamicFeature.class)) {
+
+            if (!context.getConfiguration().isRegistered(Cache.Feature.class)) {
+                context.register(Cache.Feature.class)
+                        .register(this);
+                return false;
+            }
 
             String conf = (String) context.getConfiguration().getProperty("security.shiro.conf");
 

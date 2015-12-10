@@ -23,13 +23,13 @@ import java.util.Set;
 
 /**
  * auto filter uris
- * <p/>
+ * <br>
  * path/child/child:get
- * <p/>
+ * <br>
  * path/child/child:post
- * <p/>
+ * <br>
  * path/child/child:patch
- * <p/>
+ * <br>
  * etc..
  *
  * @author icode

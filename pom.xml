@@ -56,11 +56,6 @@
                             <execution>
                                 <id>sign-artifacts</id>
                                 <phase>verify</phase>
-                                <configuration>
-                                    <gpgArguments>
-                                        <argument>--no-tty</argument>
-                                    </gpgArguments>
-                                </configuration>
                                 <goals>
                                     <goal>sign</goal>
                                 </goals>
@@ -135,7 +130,6 @@
             <groupId>org.amebastack.module</groupId>
             <artifactId>ameba-cache-core</artifactId>
             <version>${ameba.cache.version}</version>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.apache.shiro</groupId>
@@ -152,7 +146,7 @@
     <properties>
         <shiro.version>1.2.4</shiro.version>
         <ameba.version>0.1.7-SNAPSHOT</ameba.version>
-        <ameba.cache.version>0.1.7.Alpha1</ameba.cache.version>
+        <ameba.cache.version>0.1.7.Alpha2</ameba.cache.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
