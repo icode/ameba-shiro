@@ -29,8 +29,6 @@ public class ShiroFeature implements Feature {
 
     private static final Logger logger = LoggerFactory.getLogger(ShiroFeature.class);
 
-    private static final String MAIN_SEC = "main";
-    private static final String SECURITY_MANAGER = "securityManager";
     @Inject
     private ServiceLocator locator;
 
@@ -57,11 +55,6 @@ public class ShiroFeature implements Feature {
                 }
             } else {
                 logger.warn("No Shiro configuration found.");
-            }
-
-            Ini.Section mainSection = ini.getSection(MAIN_SEC);
-            if (!mainSection.containsKey(SECURITY_MANAGER)) {
-                mainSection.put(SECURITY_MANAGER, DefaultSecurityManager.class.getName());
             }
 
             IniSecurityManagerFactory factory = new IniSecurityManagerFactory(ini, locator);

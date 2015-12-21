@@ -1,14 +1,10 @@
 package ameba.security.shiro.config;
 
-/**
- * @author icode
- */
-
+import ameba.security.shiro.internal.mgt.DefaultSecurityManager;
 import org.apache.shiro.config.ConfigurationException;
 import org.apache.shiro.config.Ini;
 import org.apache.shiro.config.IniFactorySupport;
 import org.apache.shiro.config.ReflectionBuilder;
-import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.mgt.RealmSecurityManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
@@ -27,6 +23,7 @@ import java.util.*;
 /**
  * A {@link Factory} that creates {@link org.apache.shiro.mgt.SecurityManager} instances based on {@link Ini} configuration.
  *
+ * @author icode
  * @since 1.0
  */
 public class IniSecurityManagerFactory extends IniFactorySupport<SecurityManager> {
