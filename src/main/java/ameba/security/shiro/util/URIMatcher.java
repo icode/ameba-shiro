@@ -116,18 +116,19 @@ public class URIMatcher {
                     return true;
                 }
             } else {
-                if (preMatch || oneDepthMatch) {
+                if (preMatch) {
                     if (!path.endsWith("/")) {
                         path += "/";
                     }
-                }
-                if (preMatch) {
                     if (path.startsWith(uri)) {
                         return true;
                     }
                 } else if (oneDepthMatch) {
+                    if (path.length() < uri.length()) {
+                        path += "/";
+                    }
                     if (path.startsWith(uri)
-                            && (path.length() < oneDepthMatchLength
+                            && (path.length() <= oneDepthMatchLength
                             || path.indexOf("/", oneDepthMatchLength) == -1)) {
                         return true;
                     }
