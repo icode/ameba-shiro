@@ -116,6 +116,11 @@ public class URIMatcher {
                     return true;
                 }
             } else {
+                if (preMatch || oneDepthMatch) {
+                    if (!path.endsWith("/")) {
+                        path += "/";
+                    }
+                }
                 if (preMatch) {
                     if (path.startsWith(uri)) {
                         return true;
