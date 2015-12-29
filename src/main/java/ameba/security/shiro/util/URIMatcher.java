@@ -72,13 +72,13 @@ public class URIMatcher {
         } else {
             this.preMatch = this.uri.endsWith("**");
             if (this.preMatch) {
-                this.uri = this.uri.substring(0, this.uri.length() - 3);
+                this.uri = this.uri.substring(0, this.uri.length() - 2);
             } else {
                 this.oneDepthMatch = this.uri.endsWith("*");
                 if (this.oneDepthMatch) {
-                    int index = this.uri.length() - 2;
+                    int index = this.uri.length() - 1;
                     this.uri = this.uri.substring(0, index);
-                    this.oneDepthMatchLength = index + 1;
+                    this.oneDepthMatchLength = index;
                 }
             }
         }
