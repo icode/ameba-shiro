@@ -72,7 +72,7 @@ public class URIMatcher {
         } else {
             this.preMatch = this.uri.endsWith("**");
             if (this.preMatch) {
-                this.uri = this.uri.substring(0, _uri.length() - 3);
+                this.uri = this.uri.substring(0, this.uri.length() - 3);
             } else {
                 this.oneDepthMatch = this.uri.endsWith("*");
                 if (this.oneDepthMatch) {
