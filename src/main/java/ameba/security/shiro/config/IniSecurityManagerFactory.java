@@ -117,7 +117,7 @@ public class IniSecurityManagerFactory extends IniFactorySupport<SecurityManager
     }
 
     protected Map<String, ?> createDefaults(Ini ini, Ini.Section mainSection) {
-        Map<String, Object> defaults = new LinkedHashMap<String, Object>();
+        Map<String, Object> defaults = new LinkedHashMap<>();
 
         SecurityManager securityManager = createDefaultInstance();
         defaults.put(SECURITY_MANAGER_NAME, securityManager);

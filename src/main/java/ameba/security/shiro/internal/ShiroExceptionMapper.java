@@ -2,6 +2,7 @@ package ameba.security.shiro.internal;
 
 import ameba.message.error.ErrorMessage;
 import ameba.message.error.ExceptionMapperUtils;
+import com.google.common.hash.Hashing;
 import org.apache.shiro.ShiroException;
 import org.apache.shiro.authz.UnauthorizedException;
 
@@ -23,10 +24,12 @@ public class ShiroExceptionMapper implements ExceptionMapper<ShiroException> {
         } else {
             status = Response.Status.FORBIDDEN;
         }
+        ErrorMessage error = ErrorMessage.fromStatus(status.getStatusCode());
+        error.setCode(Hashing.murmur3_32().hashUnencodedChars(exception.getClass().getName()).toString());
 
         return Response.status(status)
                 .type(ExceptionMapperUtils.getResponseType())
-                .entity(ErrorMessage.fromStatus(status.getStatusCode()))
+                .entity(error)
                 .build();
     }
 }
