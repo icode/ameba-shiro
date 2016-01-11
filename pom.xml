@@ -136,13 +136,29 @@
         <dependency>
             <groupId>org.amebastack.module</groupId>
             <artifactId>ameba-session</artifactId>
-            <version>${ameba.version}</version>
+            <version>${ameba.session.version}</version>
         </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>oss</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <releases>
+                <updatePolicy>never</updatePolicy>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>interval:5</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <properties>
         <shiro.version>1.2.4</shiro.version>
         <ameba.version>0.1.8-SNAPSHOT</ameba.version>
+        <ameba.session.version>0.1.7-SNAPSHOT</ameba.session.version>
         <ameba.cache.version>0.1.7.Alpha2</ameba.cache.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
