@@ -127,6 +127,7 @@
             <groupId>org.amebastack.module</groupId>
             <artifactId>ameba-cache-core</artifactId>
             <version>${ameba.cache.version}</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.apache.shiro</groupId>
@@ -158,8 +159,9 @@
     <properties>
         <shiro.version>1.2.4</shiro.version>
         <ameba.version>0.1.8-SNAPSHOT</ameba.version>
-        <ameba.session.version>0.1.7-SNAPSHOT</ameba.session.version>
-        <ameba.cache.version>0.1.7.Alpha2</ameba.cache.version>
+        <ameba.version>0.1.8-SNAPSHOT</ameba.version>
+        <ameba.session.version>0.1.8-SNAPSHOT</ameba.session.version>
+        <ameba.cache.version>0.1.8-SNAPSHOT</ameba.cache.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 

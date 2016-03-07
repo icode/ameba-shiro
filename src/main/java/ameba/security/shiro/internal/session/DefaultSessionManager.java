@@ -1,5 +1,6 @@
 package ameba.security.shiro.internal.session;
 
+import ameba.http.session.AbstractSession;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.SessionException;
 import org.apache.shiro.session.mgt.SessionContext;
@@ -22,7 +23,10 @@ public class DefaultSessionManager implements SessionManager {
     }
 
     private Session getSession() {
-        return new DefaultSession(ameba.http.session.Session.get());
+        AbstractSession session = ameba.http.session.Session.get(false);
+        if (session != null)
+            return new DefaultSession(session);
+        else return null;
     }
 
 }

@@ -4,6 +4,7 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.SubjectContext;
+import org.apache.shiro.subject.support.DelegatingSubject;
 
 /**
  * @author icode
@@ -17,6 +18,6 @@ public class DefaultSubjectFactory extends org.apache.shiro.mgt.DefaultSubjectFa
         boolean authenticated = context.resolveAuthenticated();
         String host = context.resolveHost();
 
-        return new DefaultDelegatingSubject(principals, authenticated, host, session, sessionEnabled, securityManager);
+        return new DelegatingSubject(principals, authenticated, host, session, sessionEnabled, securityManager);
     }
 }

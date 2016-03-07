@@ -20,7 +20,7 @@ public class DefaultSubjectContext extends org.apache.shiro.subject.support.Defa
     @Override
     public String resolveHost() {
         String host = super.resolveHost();
-        if (host == null) {
+        if (host == null && Session.get(false) != null) {
             return Session.getHost();
         }
         return host;
@@ -28,6 +28,6 @@ public class DefaultSubjectContext extends org.apache.shiro.subject.support.Defa
 
     @Override
     public Serializable getSessionId() {
-        return Session.getId();
+        return Session.get(false) != null ? Session.getId() : null;
     }
 }
