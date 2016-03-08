@@ -1,18 +1,20 @@
 package ameba.security.shiro.internal.subject;
 
 import ameba.http.session.Session;
+import ameba.security.shiro.util.WebUtil;
 import org.apache.shiro.subject.SubjectContext;
+import org.apache.shiro.subject.support.DefaultSubjectContext;
 
 import java.io.Serializable;
 
 /**
  * @author icode
  */
-public class DefaultSubjectContext extends org.apache.shiro.subject.support.DefaultSubjectContext {
-    public DefaultSubjectContext() {
+public class DefaultWebSubjectContext extends DefaultSubjectContext {
+    public DefaultWebSubjectContext() {
     }
 
-    public DefaultSubjectContext(SubjectContext context) {
+    public DefaultWebSubjectContext(SubjectContext context) {
         super(context);
     }
 
@@ -20,7 +22,7 @@ public class DefaultSubjectContext extends org.apache.shiro.subject.support.Defa
     @Override
     public String resolveHost() {
         String host = super.resolveHost();
-        if (host == null && Session.get(false) != null) {
+        if (host == null && WebUtil.hasSession()) {
             return Session.getHost();
         }
         return host;
@@ -28,8 +30,6 @@ public class DefaultSubjectContext extends org.apache.shiro.subject.support.Defa
 
     @Override
     public Serializable getSessionId() {
-        return Session.get(false) != null ? Session.getId() : null;
+        return WebUtil.hasSession() ? Session.getId() : null;
     }
-
-
 }

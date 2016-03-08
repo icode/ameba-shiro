@@ -1,6 +1,6 @@
 package ameba.security.shiro.config;
 
-import ameba.security.shiro.internal.mgt.DefaultSecurityManager;
+import ameba.security.shiro.internal.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.config.ConfigurationException;
 import org.apache.shiro.config.Ini;
 import org.apache.shiro.config.IniFactorySupport;
@@ -54,7 +54,7 @@ public class IniSecurityManagerFactory extends IniFactorySupport<SecurityManager
     }
 
     protected SecurityManager createDefaultInstance() {
-        return new DefaultSecurityManager();
+        return new DefaultWebSecurityManager();
     }
 
     protected SecurityManager createInstance(Ini ini) {

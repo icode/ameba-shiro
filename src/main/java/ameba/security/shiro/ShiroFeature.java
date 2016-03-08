@@ -6,7 +6,6 @@ import ameba.security.shiro.filters.ShiroContainerFilter;
 import ameba.security.shiro.internal.ShiroBinder;
 import ameba.security.shiro.internal.ShiroDynamicFeature;
 import ameba.security.shiro.internal.ShiroExceptionMapper;
-import ameba.security.shiro.internal.mgt.DefaultSecurityManager;
 import ameba.util.IOUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.config.Ini;

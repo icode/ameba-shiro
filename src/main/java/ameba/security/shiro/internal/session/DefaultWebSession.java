@@ -11,12 +11,12 @@ import java.util.Date;
 /**
  * @author icode
  */
-public class DefaultSession implements Session {
+public class DefaultWebSession implements Session {
 
 
     private AbstractSession session;
 
-    public DefaultSession(AbstractSession session) {
+    public DefaultWebSession(AbstractSession session) {
         this.session = session;
     }
 
