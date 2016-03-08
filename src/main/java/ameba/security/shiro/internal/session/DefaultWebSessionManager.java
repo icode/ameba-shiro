@@ -1,27 +1,32 @@
 package ameba.security.shiro.internal.session;
 
 import ameba.http.session.AbstractSession;
-import ameba.security.shiro.internal.mgt.DefaultWebSessionFactory;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.SessionException;
-import org.apache.shiro.session.mgt.DefaultSessionManager;
+import org.apache.shiro.session.mgt.AbstractSessionManager;
+import org.apache.shiro.session.mgt.SessionContext;
 import org.apache.shiro.session.mgt.SessionKey;
 
 /**
  * @author icode
  */
-public class DefaultWebSessionManager extends DefaultSessionManager {
+public class DefaultWebSessionManager extends AbstractSessionManager {
 
-    public DefaultWebSessionManager() {
-        super();
-        setSessionFactory(new DefaultWebSessionFactory());
+    @Override
+    public Session start(SessionContext context) {
+        return getSession(true);
     }
 
     @Override
     public Session getSession(SessionKey key) throws SessionException {
-        AbstractSession session = ameba.http.session.Session.get(false);
+        return getSession(false);
+    }
+
+    private Session getSession(boolean create) {
+        AbstractSession session = ameba.http.session.Session.get(create);
         if (session != null)
             return new DefaultWebSession(session);
         else return null;
     }
+
 }

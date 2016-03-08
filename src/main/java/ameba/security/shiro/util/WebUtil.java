@@ -10,7 +10,7 @@ public class WebUtil {
     private WebUtil() {
     }
 
-    public static boolean isHttp() {
+    public static boolean isWeb() {
         return Requests.getRequest() != null;
     }
 
