@@ -30,4 +30,6 @@ public class DefaultSubjectContext extends org.apache.shiro.subject.support.Defa
     public Serializable getSessionId() {
         return Session.get(false) != null ? Session.getId() : null;
     }
+
+
 }

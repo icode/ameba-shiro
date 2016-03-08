@@ -14,16 +14,16 @@ public class DefaultSessionManager implements SessionManager {
 
     @Override
     public Session start(SessionContext context) {
-        return getSession();
+        return getSession(true);
     }
 
     @Override
     public Session getSession(SessionKey key) throws SessionException {
-        return getSession();
+        return getSession(false);
     }
 
-    private Session getSession() {
-        AbstractSession session = ameba.http.session.Session.get(false);
+    private Session getSession(boolean create) {
+        AbstractSession session = ameba.http.session.Session.get(create);
         if (session != null)
             return new DefaultSession(session);
         else return null;
