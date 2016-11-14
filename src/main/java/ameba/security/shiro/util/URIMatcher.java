@@ -3,6 +3,7 @@ package ameba.security.shiro.util;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -11,7 +12,7 @@ import java.util.regex.Pattern;
 /**
  * @author icode
  */
-public class URIMatcher {
+public class URIMatcher implements Serializable {
     protected static final Pattern URI_REGEX = Pattern.compile("\\{(.*?)\\}");
     protected static final String WILDCARD_TOKEN = "*";
 
