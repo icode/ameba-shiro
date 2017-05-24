@@ -24,7 +24,7 @@ public class SubjectValueSupplierProvider extends AbstractValueSupplierProvider 
     protected SubjectValueSupplierProvider(MultivaluedParameterExtractorProvider mpep,
                                            Provider<ContainerRequest> requestProvider,
                                            InjectionManager injectionManager) {
-        super(mpep, requestProvider, Parameter.Source.UNKNOWN);
+        super(mpep, requestProvider, Parameter.Source.BEAN_PARAM, Parameter.Source.UNKNOWN);
         this.injectionManager = injectionManager;
     }
 
