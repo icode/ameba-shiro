@@ -4,7 +4,7 @@ import org.apache.shiro.config.ConfigurationException;
 import org.apache.shiro.config.ReflectionBuilder;
 import org.apache.shiro.util.ClassUtils;
 import org.apache.shiro.util.Nameable;
-import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,15 +15,15 @@ import java.util.Map;
  */
 public class InjectReflectionBuilder extends ReflectionBuilder {
     private static final Logger logger = LoggerFactory.getLogger(InjectReflectionBuilder.class);
-    private ServiceLocator locator;
+    private InjectionManager injectionManager;
 
-    public InjectReflectionBuilder(ServiceLocator locator) {
-        this.locator = locator;
+    public InjectReflectionBuilder(InjectionManager injectionManager) {
+        this.injectionManager = injectionManager;
     }
 
-    public InjectReflectionBuilder(Map<String, ?> defaults, ServiceLocator locator) {
+    public InjectReflectionBuilder(Map<String, ?> defaults, InjectionManager injectionManager) {
         super(defaults);
-        this.locator = locator;
+        this.injectionManager = injectionManager;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class InjectReflectionBuilder extends ReflectionBuilder {
 
         Object instance;//name with no property, assume right hand side of equals sign is the class name:
         try {
-            instance = locator.createAndInitialize(ClassUtils.forName(value));
+            instance = injectionManager.createAndInitialize(ClassUtils.forName(value));
             if (instance instanceof Nameable) {
                 ((Nameable) instance).setName(name);
             }

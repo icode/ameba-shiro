@@ -10,7 +10,7 @@ import ameba.util.IOUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.config.Ini;
 import org.apache.shiro.mgt.SecurityManager;
-import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +29,7 @@ public class ShiroFeature implements Feature {
     private static final Logger logger = LoggerFactory.getLogger(ShiroFeature.class);
 
     @Inject
-    private ServiceLocator locator;
+    private InjectionManager injectionManager;
 
     @Override
     public boolean configure(FeatureContext context) {
@@ -56,14 +56,14 @@ public class ShiroFeature implements Feature {
                 logger.warn("No Shiro configuration found.");
             }
 
-            IniSecurityManagerFactory factory = new IniSecurityManagerFactory(ini, locator);
+            IniSecurityManagerFactory factory = new IniSecurityManagerFactory(ini, injectionManager);
             final SecurityManager securityManager = factory.getInstance();
 
             SecurityUtils.setSecurityManager(securityManager);
 
             context.register(ShiroDynamicFeature.class)
                     .register(ShiroExceptionMapper.class)
-                    .register(new ShiroBinder(securityManager))
+                    .register(new ShiroBinder(securityManager, injectionManager))
                     .register(ShiroContainerFilter.class);
 
             return true;

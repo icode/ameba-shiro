@@ -14,7 +14,7 @@ import org.apache.shiro.util.CollectionUtils;
 import org.apache.shiro.util.Factory;
 import org.apache.shiro.util.LifecycleUtils;
 import org.apache.shiro.util.Nameable;
-import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,16 +33,16 @@ public class IniSecurityManagerFactory extends IniFactorySupport<SecurityManager
     public static final String SECURITY_MANAGER_NAME = "securityManager";
     public static final String INI_REALM_NAME = "iniRealm";
     private static transient final Logger log = LoggerFactory.getLogger(IniSecurityManagerFactory.class);
-    private ServiceLocator locator;
+    private InjectionManager injectionManager;
     private ReflectionBuilder builder;
 
-    public IniSecurityManagerFactory(Ini ini, ServiceLocator locator) {
+    public IniSecurityManagerFactory(Ini ini, InjectionManager injectionManager) {
         super(ini);
-        this.locator = locator;
+        this.injectionManager = injectionManager;
     }
 
-    public IniSecurityManagerFactory(ServiceLocator locator) {
-        this.locator = locator;
+    public IniSecurityManagerFactory(InjectionManager injectionManager) {
+        this.injectionManager = injectionManager;
     }
 
     public Map<String, ?> getBeans() {
@@ -133,7 +133,7 @@ public class IniSecurityManagerFactory extends IniFactorySupport<SecurityManager
     }
 
     private Map<String, ?> buildInstances(Ini.Section section, Map<String, ?> defaults) {
-        this.builder = new InjectReflectionBuilder(defaults, locator);
+        this.builder = new InjectReflectionBuilder(defaults, injectionManager);
         return this.builder.buildObjects(section);
     }
 
