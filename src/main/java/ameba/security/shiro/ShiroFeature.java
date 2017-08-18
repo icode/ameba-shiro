@@ -63,7 +63,7 @@ public class ShiroFeature implements Feature {
 
             context.register(ShiroDynamicFeature.class)
                     .register(ShiroExceptionMapper.class)
-                    .register(new ShiroBinder(securityManager, injectionManager))
+                    .register(new ShiroBinder(securityManager))
                     .register(ShiroContainerFilter.class);
 
             return true;

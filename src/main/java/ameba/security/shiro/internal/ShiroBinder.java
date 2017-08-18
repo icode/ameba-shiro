@@ -5,27 +5,26 @@ import org.apache.shiro.authz.Authorizer;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.subject.Subject;
+import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
-import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.process.internal.RequestScoped;
-import org.glassfish.jersey.server.spi.internal.ValueSupplierProvider;
+
+import javax.inject.Inject;
 
 /**
  * @author icode
  */
 public class ShiroBinder extends AbstractBinder {
 
-    private final InjectionManager injectionManager;
     private SecurityManager securityManager;
 
-    public ShiroBinder(SecurityManager securityManager, InjectionManager injectionManager) {
+    public ShiroBinder(SecurityManager securityManager) {
         this.securityManager = securityManager;
-        this.injectionManager = injectionManager;
     }
 
     @Override
     protected void configure() {
-        bindFactory(SubjectValueSupplierProvider.SubjectFactory.class)
+        bindFactory(SubjectFactory.class)
                 .to(Subject.class)
                 .in(RequestScoped.class);
 
@@ -35,13 +34,21 @@ public class ShiroBinder extends AbstractBinder {
                 .to(Authorizer.class)
                 .to(SessionManager.class)
                 .proxy(false);
-
-        SubjectValueSupplierProvider beanSupplier =
-                injectionManager.createAndInitialize(SubjectValueSupplierProvider.class);
-        bindValueSupplier(beanSupplier);
     }
 
-    private <T extends ValueSupplierProvider> void bindValueSupplier(T supplier) {
-        bind(supplier).to(ValueSupplierProvider.class);
+    static final class SubjectFactory implements Factory<Subject> {
+
+        @Inject
+        private SecurityManager manager;
+
+        @Override
+        public Subject provide() {
+            return new Subject.Builder(manager).buildSubject();
+        }
+
+        @Override
+        public void dispose(Subject subject) {
+
+        }
     }
 }
