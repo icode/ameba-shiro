@@ -5,11 +5,11 @@ import org.apache.shiro.authz.Authorizer;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.subject.Subject;
-import org.glassfish.hk2.api.Factory;
-import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.process.internal.RequestScoped;
 
 import javax.inject.Inject;
+import java.util.function.Supplier;
 
 /**
  * @author icode
@@ -27,7 +27,6 @@ public class ShiroBinder extends AbstractBinder {
         bindFactory(SubjectFactory.class)
                 .to(Subject.class)
                 .in(RequestScoped.class);
-
         bind(securityManager)
                 .to(SecurityManager.class)
                 .to(Authenticator.class)
@@ -36,19 +35,14 @@ public class ShiroBinder extends AbstractBinder {
                 .proxy(false);
     }
 
-    static final class SubjectFactory implements Factory<Subject> {
+    static final class SubjectFactory implements Supplier<Subject> {
 
         @Inject
         private SecurityManager manager;
 
         @Override
-        public Subject provide() {
+        public Subject get() {
             return new Subject.Builder(manager).buildSubject();
-        }
-
-        @Override
-        public void dispose(Subject subject) {
-
         }
     }
 }
