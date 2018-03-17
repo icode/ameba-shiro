@@ -30,6 +30,10 @@ public class DefaultWebSubjectContext extends DefaultSubjectContext {
 
     @Override
     public Serializable getSessionId() {
-        return WebUtil.hasSession() ? Session.getId() : null;
+        Serializable id = super.getSessionId();
+        if (id == null && WebUtil.hasSession()) {
+            return Session.getId();
+        }
+        return id;
     }
 }

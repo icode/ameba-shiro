@@ -1,5 +1,6 @@
-package ameba.security.shiro.internal.subject;
+package ameba.security.shiro.internal.mgt;
 
+import ameba.security.shiro.internal.subject.DefaultWebSubjectContext;
 import org.apache.shiro.mgt.DefaultSubjectFactory;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -12,6 +13,9 @@ import org.apache.shiro.subject.support.DelegatingSubject;
  */
 public class DefaultWebSubjectFactory extends DefaultSubjectFactory {
     public Subject createSubject(SubjectContext context) {
+        if (!(context instanceof DefaultWebSubjectContext)) {
+            return super.createSubject(context);
+        }
         org.apache.shiro.mgt.SecurityManager securityManager = context.resolveSecurityManager();
         Session session = context.resolveSession();
         boolean sessionEnabled = context.isSessionCreationEnabled();

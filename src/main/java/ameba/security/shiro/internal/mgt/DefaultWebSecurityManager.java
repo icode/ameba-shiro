@@ -2,7 +2,6 @@ package ameba.security.shiro.internal.mgt;
 
 import ameba.security.shiro.internal.session.DefaultWebSessionManager;
 import ameba.security.shiro.internal.subject.DefaultWebSubjectContext;
-import ameba.security.shiro.internal.subject.DefaultWebSubjectFactory;
 import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.subject.SubjectContext;
@@ -26,7 +25,6 @@ public class DefaultWebSecurityManager extends DefaultSecurityManager {
         setRealm(singleRealm);
     }
 
-    @SuppressWarnings({"UnusedDeclaration"})
     public DefaultWebSecurityManager(Collection<Realm> realms) {
         this();
         setRealms(realms);
@@ -39,6 +37,9 @@ public class DefaultWebSecurityManager extends DefaultSecurityManager {
 
     @Override
     protected SubjectContext copy(SubjectContext subjectContext) {
-        return new DefaultWebSubjectContext(subjectContext);
+        if (subjectContext instanceof DefaultWebSubjectContext) {
+            return new DefaultWebSubjectContext(subjectContext);
+        }
+        return super.copy(subjectContext);
     }
 }

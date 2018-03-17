@@ -85,8 +85,6 @@ public class IniSecurityManagerFactory extends IniFactorySupport<SecurityManager
             RealmSecurityManager realmSecurityManager = (RealmSecurityManager) securityManager;
             Collection<Realm> realms = realmSecurityManager.getRealms();
             if (!CollectionUtils.isEmpty(realms)) {
-                log.info("Realms have been explicitly set on the SecurityManager instance - auto-setting of " +
-                        "realms will not occur.");
                 autoApply = false;
             }
         }
