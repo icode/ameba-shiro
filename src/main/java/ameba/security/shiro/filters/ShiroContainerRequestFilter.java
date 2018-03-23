@@ -10,6 +10,8 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Response;
 
+import static ameba.security.shiro.filters.AuthenticateFilter.AUTHENTICATED;
+
 /**
  * @author icode
  */
@@ -34,8 +36,9 @@ public abstract class ShiroContainerRequestFilter implements ContainerRequestFil
 
     @Override
     public void filter(ContainerRequestContext containerRequestContext) {
+        Object authenticated = containerRequestContext.getProperty(AUTHENTICATED);
         Subject subject = subjectProvider.get();
-        if (!isAuthorized(subject)) {
+        if (authenticated == null && !isAuthorized(subject)) {
             throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
         } else if (!isAccessAllowed(subject)) {
             throw new ForbiddenException();

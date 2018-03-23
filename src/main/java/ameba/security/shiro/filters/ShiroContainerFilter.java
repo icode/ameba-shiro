@@ -16,7 +16,6 @@ import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
-import java.io.IOException;
 
 /**
  * @author icode
@@ -35,8 +34,7 @@ public class ShiroContainerFilter extends OncePerContainerFilter {
     }
 
     @Override
-    public void doFilter(ContainerRequestContext requestContext, ContainerResponseContext responseContext)
-            throws IOException {
+    public void doFilter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) {
         String removeRemember = (String) requestContext.getProperty(CookieRememberMeManager.RM_REMEMBER_COOKIE_KEY);
         if (StringUtils.isNotBlank(removeRemember)) {
             responseContext.getHeaders().add(HttpHeaders.SET_COOKIE, Cookies.newDeletedCookie(removeRemember));
