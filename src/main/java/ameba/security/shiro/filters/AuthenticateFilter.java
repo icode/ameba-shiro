@@ -53,6 +53,7 @@ public class AuthenticateFilter implements ContainerRequestFilter {
         }
         uris = FilterUtil.getMatchUris(application.getSrcProperties(), "security.filter.authenticate.uris");
         ignoreUris = FilterUtil.getMatchUris(application.getSrcProperties(), "security.filter.authenticate.ignoreUris");
+        ignoreUris.addAll(FilterUtil.getMatchUris(application.getSrcProperties(), "security.filter.ignoreUris"));
         loginUrl = FilterUtil.getLoginUrl(application.getSrcProperties());
         ignoreUris.add(new URIMatcher(loginUrl));
     }
