@@ -21,6 +21,8 @@ import javax.ws.rs.core.UriInfo;
 import java.util.Map;
 import java.util.Set;
 
+import static ameba.security.shiro.filters.AuthenticateFilter.AUTHENTICATED;
+
 /**
  * auto filter uris
  * <br>
@@ -60,8 +62,9 @@ public class UriPermissionFilter extends ShiroContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext containerRequestContext) {
-        if (!FilterUtil.isMatchUri(ignoreUris)
-                && (uris.size() == 0 || FilterUtil.isMatchUri(uris))) {
+        Object authenticated = containerRequestContext.getProperty(AUTHENTICATED);
+        if (authenticated == null && (!FilterUtil.isMatchUri(ignoreUris)
+                && (uris.size() == 0 || FilterUtil.isMatchUri(uris)))) {
             super.filter(containerRequestContext);
         }
     }

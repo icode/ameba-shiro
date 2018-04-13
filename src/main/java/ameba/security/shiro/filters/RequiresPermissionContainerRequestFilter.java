@@ -1,5 +1,6 @@
 package ameba.security.shiro.filters;
 
+import com.google.common.collect.Lists;
 import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -9,7 +10,6 @@ import org.apache.shiro.subject.Subject;
 import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ResourceInfo;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -18,7 +18,7 @@ import java.util.Objects;
  */
 @Priority(Priorities.AUTHORIZATION)
 public class RequiresPermissionContainerRequestFilter extends ShiroContainerRequestFilter {
-    private final Collection<Permission> requiredPermissions = new ArrayList<Permission>();
+    private final Collection<Permission> requiredPermissions = Lists.newArrayList();
     private final Logical logical;
 
     public RequiresPermissionContainerRequestFilter(ResourceInfo resourceInfo) {
