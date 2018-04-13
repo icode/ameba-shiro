@@ -7,6 +7,7 @@ import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ThreadContext;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.process.internal.RequestScoped;
 
@@ -45,7 +46,9 @@ public class ShiroBinder extends AbstractBinder {
 
         @Override
         public Subject get() {
-            return manager.createSubject(new DefaultWebSubjectContext());
+            Subject subject = manager.createSubject(new DefaultWebSubjectContext());
+            ThreadContext.bind(subject);
+            return subject;
         }
     }
 }
