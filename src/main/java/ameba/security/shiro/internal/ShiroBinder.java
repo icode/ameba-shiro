@@ -3,7 +3,7 @@ package ameba.security.shiro.internal;
 import ameba.security.shiro.internal.subject.DefaultWebSubjectContext;
 import org.apache.shiro.authc.Authenticator;
 import org.apache.shiro.authz.Authorizer;
-import org.apache.shiro.mgt.DefaultSecurityManager;
+import org.apache.shiro.mgt.*;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.subject.Subject;
@@ -36,6 +36,11 @@ public class ShiroBinder extends AbstractBinder {
                 .to(Authenticator.class)
                 .to(Authorizer.class)
                 .to(SessionManager.class)
+                .to(SessionsSecurityManager.class)
+                .to(AuthorizingSecurityManager.class)
+                .to(AuthenticatingSecurityManager.class)
+                .to(RealmSecurityManager.class)
+                .to(CachingSecurityManager.class)
                 .proxy(false);
     }
 
