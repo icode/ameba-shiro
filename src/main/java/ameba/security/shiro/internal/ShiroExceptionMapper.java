@@ -4,7 +4,8 @@ import ameba.message.error.ErrorMessage;
 import ameba.message.error.ExceptionMapperUtils;
 import com.google.common.hash.Hashing;
 import org.apache.shiro.ShiroException;
-import org.apache.shiro.authz.UnauthorizedException;
+import org.apache.shiro.authz.HostUnauthorizedException;
+import org.apache.shiro.authz.UnauthenticatedException;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -19,7 +20,7 @@ public class ShiroExceptionMapper implements ExceptionMapper<ShiroException> {
 
         Response.Status status;
 
-        if (exception instanceof UnauthorizedException) {
+        if (exception instanceof UnauthenticatedException || exception instanceof HostUnauthorizedException) {
             status = Response.Status.UNAUTHORIZED;
         } else {
             status = Response.Status.FORBIDDEN;
